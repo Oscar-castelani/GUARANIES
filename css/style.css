@@ -50,10 +50,14 @@ html,body{margin:0;height:100%;overscroll-behavior:none;position:fixed;inset:0;w
 @media (prefers-reduced-motion:reduce){.phone{animation:none;transform:rotate(-90deg)}}
 /* menú sin scroll en celulares */
 @media (max-width:700px){#menu{overflow:hidden;padding-bottom:8px}.cards{grid-template-columns:repeat(2,1fr);gap:8px}.card span{display:none}.card b{font-size:15px}.card .t{padding:5px 8px 7px}.card canvas{aspect-ratio:16/8;object-fit:cover}.menu-head{margin:2px 0 6px}.menu-head h1{font-size:24px}.menu-head p{display:none}.menu-foot{margin-top:6px}}
-@media (max-height:520px) and (min-width:700px){#menu{overflow:hidden;padding-top:6px;padding-bottom:6px}.menu-head{margin:0 0 6px}.menu-head h1{font-size:22px}.menu-head p{display:none}.cards{grid-template-columns:repeat(5,1fr);gap:8px}.card span{display:none}.card b{font-size:14px}.card .t{padding:4px 7px 6px}.card canvas{aspect-ratio:16/10;object-fit:cover}.menu-foot{margin-top:6px}.chip{min-height:36px;padding:5px 12px}}
+@media (orientation:landscape) and (max-height:620px){#menu{overflow:hidden;padding-top:6px;padding-bottom:6px}.menu-head{margin:0 0 6px}.menu-head h1{font-size:22px}.menu-head p{display:none}.cards{grid-template-columns:repeat(5,1fr);gap:8px}.card span{display:none}.card b{font-size:clamp(11px,1.9vw,14px);line-height:1.15}.card .t{padding:4px 6px 6px}.card canvas{aspect-ratio:16/10;object-fit:cover}.menu-foot{margin-top:6px}.chip{min-height:36px;padding:5px 12px}.cards{gap:6px}#menu{padding-left:8px;padding-right:8px}.card{border-radius:12px}}
 
 /* portada de inicio (3 s, se puede saltar tocando) */
 #splash{position:fixed;inset:0;z-index:90;background:linear-gradient(#3c93d8 0 72%,#5a3320 72%);display:flex;align-items:center;justify-content:center;transition:opacity .5s;cursor:pointer}
 #splash img{width:100%;height:100%;object-fit:contain;display:block;-webkit-user-drag:none}
 #splash.out{opacity:0;pointer-events:none}
 @media (max-height:460px){#hud{min-height:38px;padding-top:2px;padding-bottom:2px;gap:6px}.hud-item .lbl{font-size:9px}.hud-item b{font-size:15px}.chip{min-height:32px;padding:3px 10px;font-size:13px}.bar{height:4px;margin-top:1px}}
+@media (max-width:380px){#hud{gap:3px;padding-left:4px;padding-right:4px}.hud-item{min-width:0}.hud-item .lbl{font-size:8px;letter-spacing:0}.hud-item b{font-size:14px}.chip{padding:4px 7px;font-size:11px;min-height:34px}.timer{min-width:56px;max-width:110px}}
+/* pantallas con notch / esquinas redondeadas */
+#hud{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
+@supports (padding:max(0px)){#menu{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}}
