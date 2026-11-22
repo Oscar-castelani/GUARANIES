@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f4d2b">
+<title>Aventura Guaraní</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Menú funcional de selección (NO es una portada; la portada la incorpora el usuario después) -->
+<main id="menu" class="screen">
+  <!-- PORTADA: espacio reservado para la futura portada. Ver README. -->
+  <header class="menu-head">
+    <h1>Aventura Guaraní</h1>
+    <p>Elegí un minijuego</p>
+  </header>
+  <section id="cards" class="cards" aria-label="Minijuegos"></section>
+  <footer class="menu-foot"><button id="muteMenu" class="chip" aria-pressed="false">Sonido: sí</button></footer>
+</main>
+
+<section id="gameScreen" class="screen hidden">
+  <div id="hud">
+    <button id="backBtn" class="chip" aria-label="Volver al menú">&#8592; Menú</button>
+    <div class="hud-item"><span class="lbl" id="goalLbl">Objetivo</span><b id="goalVal">0/0</b></div>
+    <div class="hud-item"><span class="lbl">Puntos</span><b id="scoreVal">0</b></div>
+    <div class="hud-item timer"><span class="lbl">Tiempo</span><b id="timeVal">0</b><i class="bar"><u id="timeBar"></u></i></div>
+    <button id="muteBtn" class="chip" aria-label="Silenciar sonido" aria-pressed="false">Sonido</button>
+  </div>
+  <div id="stage">
+    <canvas id="c" aria-label="Zona de juego"></canvas>
+    <div id="rotateHint" class="hidden">Girá el celular en horizontal para jugar mejor</div>
+    <div id="overlay" class="hidden" role="dialog" aria-modal="true">
+      <div class="panel">
+        <canvas id="ovThumb" width="320" height="140"></canvas>
+        <h2 id="ovTitle"></h2>
+        <p id="ovText"></p>
+        <p id="ovEdu" class="edu"></p>
+        <div class="btns"><button id="ovBtn1" class="big"></button><button id="ovBtn2" class="big alt"></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="js/content.js"></script>
+<script src="js/art.js"></script>
+<script src="js/art2.js"></script>
+<script src="js/core.js"></script>
+<script src="js/games/arco.js"></script>
+<script src="js/games/tucanes.js"></script>
+<script src="js/games/canasta.js"></script>
+<script src="js/games/cosecha.js"></script>
+<script src="js/games/fuego.js"></script>
+<script>Core.init();</script>
+</body>
+</html>
