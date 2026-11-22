@@ -206,6 +206,8 @@ const Core = (function () {
     });
     $('rotSkip').onclick = () => { rotSkipped = true; checkOrient(); };
     checkOrient();
+    const sp = $('splash');
+    if (sp) { let gone = false; const bye = () => { if (gone) return; gone = true; sp.classList.add('out'); setTimeout(() => sp.remove(), 600); }; sp.addEventListener('pointerdown', bye); setTimeout(bye, 3000); }
     requestAnimationFrame(loop);
   }
 

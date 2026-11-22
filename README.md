@@ -1,7 +1,7 @@
 # Aventura Guaraní — cinco minijuegos web
 
 Sitio estático (HTML5 + CSS + JavaScript, Canvas 2D, sin dependencias ni servidor). Sin anuncios, registro ni datos personales.
-**No incluye portada**: hay un menú funcional y un comentario `PORTADA` en `index.html` donde integrarla.
+Al abrir muestra 3 segundos la portada (`assets/portada.jpg`, reemplazable) y luego el menú de juegos; se puede saltar tocando.
 
 ## Juegos
 | Juego | Tiempo | Meta |
