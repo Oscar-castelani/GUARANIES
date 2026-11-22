@@ -143,7 +143,22 @@ const Core = (function () {
     const bw = Math.round(cw * dpr);
     if (canvas.width !== bw) { canvas.width = bw; canvas.height = Math.round(bw * H / W); }
     k = canvas.width / W;
-    $('rotateHint').classList.toggle('hidden', !(window.innerHeight > window.innerWidth && state !== 'menu'));
+    checkOrient();
+  }
+
+  /* ---------- aviso de girar el celular ---------- */
+  let rotSkipped = false;
+  function pauseGame() {
+    if (state !== 'play') return;
+    state = 'pause';
+    showOverlay({ title: 'Pausa', text: 'El juego quedó en pausa.', edu: '', b1: 'Continuar', f1: () => { hideOverlay(); state = 'play'; }, b2: 'Menú', f2: showMenu, thumb: false });
+  }
+  function checkOrient() {
+    const portrait = window.innerHeight > window.innerWidth, phone = Math.min(window.innerWidth, window.innerHeight) < 700;
+    if (!portrait) rotSkipped = false;
+    const show = portrait && phone && !rotSkipped;
+    $('rotate').classList.toggle('hidden', !show);
+    if (show) pauseGame();
   }
 
   /* ---------- bucle ---------- */
@@ -187,11 +202,10 @@ const Core = (function () {
     $('muteBtn').onclick = () => setMuted(!muted); $('muteMenu').onclick = () => setMuted(!muted);
     window.addEventListener('resize', resize); window.addEventListener('orientationchange', () => setTimeout(resize, 250));
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden && state === 'play') {
-        state = 'pause';
-        showOverlay({ title: 'Pausa', text: 'El juego quedó en pausa.', edu: '', b1: 'Continuar', f1: () => { hideOverlay(); state = 'play'; }, b2: 'Menú', f2: showMenu, thumb: false });
-      }
+      if (document.hidden) pauseGame();
     });
+    $('rotSkip').onclick = () => { rotSkipped = true; checkOrient(); };
+    checkOrient();
     requestAnimationFrame(loop);
   }
 

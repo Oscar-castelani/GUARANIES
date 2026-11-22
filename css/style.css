@@ -1,6 +1,6 @@
 :root{--g1:#173d24;--g2:#2c6b3a;--ink:#2a1d10;--paper:#f6ead0;--accent:#e08a1e;--accent2:#b5471f}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:var(--g1);color:var(--paper);font-family:Georgia,"Palatino Linotype",serif;overflow:hidden;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;overscroll-behavior:none;position:fixed;inset:0;width:100%;background:var(--g1);color:var(--paper);font-family:Georgia,"Palatino Linotype",serif;overflow:hidden;-webkit-user-select:none;user-select:none}
 .hidden{display:none!important}
 .screen{position:fixed;inset:0;display:flex;flex-direction:column}
 #menu{background:radial-gradient(ellipse at 50% 0%,#3e8a4c 0%,#1d5230 55%,#12301c 100%);overflow:auto;align-items:center;padding:max(14px,env(safe-area-inset-top)) 16px 20px}
@@ -39,3 +39,15 @@ html,body{margin:0;height:100%;background:var(--g1);color:var(--paper);font-fami
 .big:active{transform:translateY(2px)}
 @media (max-height:420px){.panel canvas{display:none}.panel{padding:10px 14px}.panel h2{font-size:20px;margin:2px}.panel p{font-size:14px}#hud{min-height:46px}.hud-item b{font-size:17px}}
 @media (max-width:520px){.hud-item{min-width:48px}.hud-item b{font-size:17px}.chip{padding:8px 10px;font-size:13px}}
+
+.screen{height:100vh;height:100dvh}
+#rotate{position:fixed;inset:0;z-index:100;background:#0e2616f2;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
+.rot-box{max-width:340px}
+.rot-box h2{margin:14px 0 6px;font-size:26px}
+.rot-box p{margin:0 0 16px;font-size:17px;line-height:1.4}
+.phone{animation:rot 2.4s ease-in-out infinite}
+@keyframes rot{0%,20%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+@media (prefers-reduced-motion:reduce){.phone{animation:none;transform:rotate(-90deg)}}
+/* menú sin scroll en celulares */
+@media (max-width:700px){#menu{overflow:hidden;padding-bottom:8px}.cards{grid-template-columns:repeat(2,1fr);gap:8px}.card span{display:none}.card b{font-size:15px}.card .t{padding:5px 8px 7px}.card canvas{aspect-ratio:16/8;object-fit:cover}.menu-head{margin:2px 0 6px}.menu-head h1{font-size:24px}.menu-head p{display:none}.menu-foot{margin-top:6px}}
+@media (max-height:520px) and (min-width:700px){#menu{overflow:hidden;padding-top:6px;padding-bottom:6px}.menu-head{margin:0 0 6px}.menu-head h1{font-size:22px}.menu-head p{display:none}.cards{grid-template-columns:repeat(5,1fr);gap:8px}.card span{display:none}.card b{font-size:14px}.card .t{padding:4px 7px 6px}.card canvas{aspect-ratio:16/10;object-fit:cover}.menu-foot{margin-top:6px}.chip{min-height:36px;padding:5px 12px}}
