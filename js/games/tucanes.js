@@ -1,7 +1,7 @@
 'use strict';
 /* Juego 2 — Encontrá los tucanes (objetos ocultos). La escena se regenera en cada partida. */
 Core.register({
-  id: 'tucanes', title: 'Encontrá los tucanes', blurb: 'Buscalos entre las ramas y las hojas.', time: CONFIG.tucanes.time, goal: CONFIG.tucanes.count, goalLabel: 'Tucanes',
+  focus: 0.5, id: 'tucanes', title: 'Encontrá los tucanes', blurb: 'Buscalos entre las ramas y las hojas.', time: CONFIG.tucanes.time, goal: CONFIG.tucanes.count, goalLabel: 'Tucanes',
   how: 'Hay ' + CONFIG.tucanes.count + ' tucanes escondidos en la selva. Tocá cada uno cuando lo encuentres. ¡Cuidado con otras aves y flores parecidas!',
   thumb(c, w, h) { c.fillStyle = Art.lg(c, 0, 0, 0, h, [[0, '#2f7a3e'], [1, '#17482c']]); c.fillRect(0, 0, w, h); const r = Art.rng(4); for (let i = 0; i < 40; i++) Art.leaf(c, r() * w, r() * h, 30 + r() * 40, 9, r() * 6.28, ['#2f8a40', '#3f9a4a', '#256a36'][i % 3]); Art.blit(c, Art.toucan(), w * .55, h * .5, 1.6, false); for (let i = 0; i < 14; i++) Art.leaf(c, r() * w, r() * h, 50 + r() * 40, 12, r() * 6.28, ['#2f8a40', '#4aa850'][i % 2]); },
   make() {
@@ -34,8 +34,8 @@ Core.register({
         if (idle > 10) { const h = scene.spots.find(q => !q.found); if (h) { c.save(); c.globalAlpha = .35 + .3 * Math.sin(t * 5); c.strokeStyle = '#fff7b0'; c.lineWidth = 3; c.beginPath(); c.arc(h.x, h.y, h.r * 2 + Math.sin(t * 5) * 6, 0, 7); c.stroke(); c.restore(); } }
         for (const m of misses) { c.save(); c.globalAlpha = 1 - m.t / .5; c.strokeStyle = '#fff'; c.lineWidth = 3; c.beginPath(); c.arc(m.x, m.y, 8 + m.t * 40, 0, 7); c.stroke(); c.restore(); }
         // contador con siluetas de tucán
-        c.save(); c.fillStyle = 'rgba(0,0,0,.45)'; c.beginPath(); c.roundRect ? c.roundRect(700, 8, 252, 44, 12) : c.rect(700, 8, 252, 44); c.fill();
-        for (let i = 0; i < CONFIG.tucanes.count; i++) Art.blit(c, Art.toucan(), 724 + i * 48, 32, .44, false, i < found ? 1 : .25);
+        c.save(); c.fillStyle = 'rgba(0,0,0,.45)'; c.beginPath(); c.roundRect ? c.roundRect(700, 66, 252, 44, 12) : c.rect(700, 66, 252, 44); c.fill();
+        for (let i = 0; i < CONFIG.tucanes.count; i++) Art.blit(c, Art.toucan(), 724 + i * 48, 90, .44, false, i < found ? 1 : .25);
         c.restore();
       },
       timeUp() { Core.finish(false, 'Encontraste ' + found + ' de ' + CONFIG.tucanes.count + ' tucanes'); }

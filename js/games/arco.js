@@ -1,7 +1,7 @@
 'use strict';
 /* Juego 1 — Arco y flecha. Flechas infinitas; solo hay pausa entre disparos (cadencia). */
 Core.register({
-  id: 'arco', title: 'Arco y flecha', blurb: 'Apuntá y alcanzá a los animales.', time: CONFIG.arco.time, goal: CONFIG.arco.goal, goalLabel: 'Animales',
+  focus: 0.85, id: 'arco', title: 'Arco y flecha', blurb: 'Apuntá y alcanzá a los animales.', time: CONFIG.arco.time, goal: CONFIG.arco.goal, goalLabel: 'Animales',
   how: 'Mové el mouse (o tocá) para apuntar y disparar. Alcanzá ' + CONFIG.arco.goal + ' animales. ¡Cada acierto acelera el juego! Las flechas son ilimitadas: solo hay una breve pausa entre tiros.',
   thumb(c, w, h) { c.drawImage(Art.huntBG(), 0, 150, 960, 330, 0, 0, w, h); Art.drawAnimal(c, 'venado', w * .62, h * .86, 1.25, true, 0, 1); Art.blit(c, Art.hunter(), w * .17, h * 1.02, .95, false, 1, 0, .5, 1); const hx = w * .17 - 75 * .95 + 88 * .95, hy = h * 1.02 - 272 * .95 + 108 * .95; Art.drawBow(c, hx, hy, hx - 30, hy + 4, -.12, .6, true); },
   make() {

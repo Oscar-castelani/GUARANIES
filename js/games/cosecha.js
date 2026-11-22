@@ -1,7 +1,7 @@
 'use strict';
 /* Juego 4 — Cosecha rápida. Tocar/clic cultivos antes de que desaparezcan. Ritmo suave y accesible. */
 Core.register({
-  id: 'cosecha', title: 'Cosecha rápida', blurb: 'Recogé los cultivos antes de que se escondan.', time: CONFIG.cosecha.time, goal: CONFIG.cosecha.goal, goalLabel: 'Cosechas',
+  focus: 0.5, id: 'cosecha', title: 'Cosecha rápida', blurb: 'Recogé los cultivos antes de que se escondan.', time: CONFIG.cosecha.time, goal: CONFIG.cosecha.goal, goalLabel: 'Cosechas',
   how: 'En la chacra van apareciendo maíz, mandioca y zapallo. Tocalos para cosecharlos antes de que se escondan. Juntá ' + CONFIG.cosecha.goal + '. Cada vez va más rápido y salen más topos: ¡no los toques! Si tocás un topo perdés 5 puntos.',
   thumb(c, w, h) { c.drawImage(Art.fieldBG(), 0, 120, 960, 420, 0, 0, w, h); [['maiz', .22], ['zapallo', .5], ['mandioca', .78]].forEach(p => { Art.blit(c, Art.mound(), w * p[1], h * .86, 1, false); Art.blit(c, Art.crop(p[0]), w * p[1], h * .88, .95, false, 1, 0, .5, 1); }); },
   make() {

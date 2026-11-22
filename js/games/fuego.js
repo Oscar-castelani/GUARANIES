@@ -2,7 +2,7 @@
 /* Juego 5 — Apagá el fuego. Juego ficticio de cuidado ambiental (no es una práctica tradicional documentada).
    Agua ilimitada; una sola descarga por pulsación con pausa de 0,75 s. */
 Core.register({
-  id: 'fuego', title: 'Apagá el fuego', blurb: 'Cuidá las casas del incendio con tu balde.', time: CONFIG.fuego.time, goal: CONFIG.fuego.housesToWin, goalLabel: 'Casas a salvo',
+  focus: 0.6, id: 'fuego', title: 'Apagá el fuego', blurb: 'Cuidá las casas del incendio con tu balde.', time: CONFIG.fuego.time, goal: CONFIG.fuego.housesToWin, goalLabel: 'Casas a salvo',
   how: 'Pequeños fuegos amenazan las casas. Mové el balde, tocá donde hay llamas y apagalas. El agua no se acaba, pero hay una pausa entre cada descarga. ¡Mantené a salvo al menos ' + CONFIG.fuego.housesToWin + ' de 4 casas!',
   thumb(c, w, h) { c.drawImage(Art.villageBG(), 0, 150, 960, 390, 0, 0, w, h); Art.blit(c, Art.house(false), w * .3, h * .86, 1.05, false, 1, 0, .5, .93); Art.blit(c, Art.house(false), w * .74, h * .8, .85, false, 1, 0, .5, .93); Art.flame(c, w * .5, h * .9, 1.1, 1, 0); Art.blit(c, Art.bucket(), w * .62, h * .5, 1.1, false, 1, .5); },
   make() {

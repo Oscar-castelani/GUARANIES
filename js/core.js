@@ -116,7 +116,7 @@ const Core = (function () {
   /* ---------- entrada ---------- */
   function toGame(e) {
     const r = canvas.getBoundingClientRect();
-    return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H];
+    return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * view.visH + view.offY];
   }
   function bindInput() {
     canvas.addEventListener('pointerdown', e => {
@@ -134,15 +134,20 @@ const Core = (function () {
   }
 
   /* ---------- tamaño ---------- */
+  const view = { offY: 0, visH: H };
   function resize() {
     if (!canvas) return;
-    const st = $('stage'), aw = st.clientWidth - 8, ah = st.clientHeight - 8;
-    if (aw <= 0 || ah <= 0) return;
-    const cw = Math.min(aw, ah * W / H), ch = cw * H / W;
+    const st = $('stage'), sw = st.clientWidth, sh = st.clientHeight;
+    if (sw <= 0 || sh <= 0) return;
+    const MAXCROP = .22, focus = cur && cur.focus != null ? cur.focus : .5;
+    let s;
+    if (sw / sh < W / H) s = sw / W;                      // pantalla alta: se ve todo el juego
+    else s = Math.min(sw / W, sh / (H * (1 - MAXCROP)));   // pantalla ancha: llena el ancho recortando un poco arriba/abajo
+    const cw = W * s, ch = Math.min(sh, H * s);
+    view.visH = ch / s; view.offY = (H - view.visH) * focus;
     canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const bw = Math.round(cw * dpr);
-    if (canvas.width !== bw) { canvas.width = bw; canvas.height = Math.round(bw * H / W); }
+    const dpr = Math.min(window.devicePixelRatio || 1, 2), bw = Math.round(cw * dpr), bh = Math.round(ch * dpr);
+    if (canvas.width !== bw || canvas.height !== bh) { canvas.width = bw; canvas.height = bh; }
     k = canvas.width / W;
     checkOrient();
   }
@@ -186,7 +191,7 @@ const Core = (function () {
       inst.update(dt);
       if (timeLeft <= 0 && state === 'play') { timeLeft = 0; updateTime(); inst.timeUp(); }
     } else if (state === 'ending') inst.update(dt);
-    ctx.setTransform(k, 0, 0, k, 0, 0);
+    ctx.setTransform(k, 0, 0, k, 0, -view.offY * k);
     inst.draw(ctx);
     floats = floats.filter(f => (f.t += dt) < 1.1);
     for (const f of floats) {

@@ -1,12 +1,12 @@
 'use strict';
 /* Juego 3 — Llená la canasta. Arrastrar (Pointer Events: mouse y táctil). Correctos: maíz, mandioca, zapallo. */
 Core.register({
-  id: 'canasta', title: 'Llená la canasta', blurb: 'Arrastrá solo maíz, mandioca y zapallo.', time: CONFIG.canasta.time, goal: CONFIG.canasta.goal, goalLabel: 'En la canasta',
+  focus: 0.75, id: 'canasta', title: 'Llená la canasta', blurb: 'Arrastrá solo maíz, mandioca y zapallo.', time: CONFIG.canasta.time, goal: CONFIG.canasta.goal, goalLabel: 'En la canasta',
   how: 'Arrastrá a la canasta solo el maíz, la mandioca y el zapallo. Las otras frutas son distractores de este juego: ¡no las pongas! Llená ' + CONFIG.canasta.goal + '.',
   thumb(c, w, h) { c.fillStyle = Art.lg(c, 0, 0, 0, h, [[0, '#b9dc9a'], [1, '#7a9a4a']]); c.fillRect(0, 0, w, h); Art.blit(c, Art.basketBack(), w * .5, h * .74, 1, false); Art.blit(c, Art.food('maiz'), w * .44, h * .62, 1.1, false, 1, -.2); Art.blit(c, Art.food('zapallo'), w * .56, h * .6, 1, false); Art.blit(c, Art.basketFront(), w * .5, h * .94, 1, false, 1, 0, .5, 1); Art.blit(c, Art.food('mandarina'), w * .14, h * .3, 1, false); Art.blit(c, Art.food('manzana'), w * .86, h * .3, 1, false); Art.blit(c, Art.food('mandioca'), w * .8, h * .66, .9, false, 1, .3); },
   make() {
-    const C = CONFIG.canasta, BASKET = { x: 480, y: 470 }, ZONE = { x: 480, y: 440, rx: 128, ry: 80 };
-    const FIELD = { x0: 70, x1: 890, y0: 78, y1: 330 };
+    const C = CONFIG.canasta, BASKET = { x: 480, y: 440 }, ZONE = { x: 480, y: 410, rx: 128, ry: 80 };
+    const FIELD = { x0: 70, x1: 890, y0: 112, y1: 315 };
     let items, drag, got, parts, bgc, t, shakes;
     function bg() {
       return Art.cache('canastaBG', () => Art.mk(960, 540, x => {
@@ -24,7 +24,7 @@ Core.register({
     function place() {
       for (let n = 0; n < 40; n++) {
         const x = FIELD.x0 + Math.random() * (FIELD.x1 - FIELD.x0), y = FIELD.y0 + Math.random() * (FIELD.y1 - FIELD.y0);
-        if (items.every(i => Math.hypot(i.x - x, i.y - y) > 104)) return { x, y };
+        if (!(x < 280 && y < 165) && items.every(i => Math.hypot(i.x - x, i.y - y) > 104)) return { x, y };
       }
       return { x: FIELD.x0 + Math.random() * 800, y: FIELD.y0 + Math.random() * 250 };
     }
@@ -79,9 +79,9 @@ Core.register({
         for (let k = 0; k < Math.min(got, 8); k++) { const kind = Art.FOOD_OK[k % 3]; Art.blit(c, Art.food(kind), BASKET.x - 60 + (k % 4) * 40, BASKET.y - 28 - Math.floor(k / 4) * 8, .62, false, 1, ((k * 53) % 7 - 3) * .12); }
         Art.blit(c, Art.basketFront(), BASKET.x, BASKET.y + 52, 1, false, 1, 0, .5, 1);
         // guía: alimentos correctos
-        c.save(); c.fillStyle = 'rgba(20,35,15,.6)'; c.beginPath(); c.roundRect ? c.roundRect(14, 12, 238, 56, 12) : c.rect(14, 12, 238, 56); c.fill();
-        c.fillStyle = '#fff'; c.font = 'bold 14px Georgia,serif'; c.textAlign = 'left'; c.fillText('Van en la canasta:', 24, 28);
-        Art.FOOD_OK.forEach((k, i) => Art.blit(c, Art.food(k), 44 + i * 76, 46, .42, false)); c.restore();
+        c.save(); c.fillStyle = 'rgba(20,35,15,.6)'; c.beginPath(); c.roundRect ? c.roundRect(14, 96, 238, 56, 12) : c.rect(14, 96, 238, 56); c.fill();
+        c.fillStyle = '#fff'; c.font = 'bold 14px Georgia,serif'; c.textAlign = 'left'; c.fillText('Van en la canasta:', 24, 112);
+        Art.FOOD_OK.forEach((k, i) => Art.blit(c, Art.food(k), 44 + i * 76, 130, .42, false)); c.restore();
         // indicador de zona al arrastrar
         if (drag) { c.save(); c.setLineDash([12, 8]); c.lineDashOffset = -t * 24; c.strokeStyle = inZone(drag.it.x, drag.it.y) ? '#fff7b0' : 'rgba(255,255,255,.55)'; c.lineWidth = 4; c.beginPath(); c.ellipse(ZONE.x, ZONE.y, ZONE.rx, ZONE.ry, 0, 0, 7); c.stroke(); c.restore(); }
       },
