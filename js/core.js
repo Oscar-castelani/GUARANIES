@@ -65,7 +65,7 @@ const Core = (function () {
     $('gameScreen').classList.add('hidden'); $('menu').classList.remove('hidden');
   }
   function openGame(id) {
-    ensureAudio();
+    ensureAudio(); goFull(); rotSkipped = false;
     cur = games[id]; score = 0; floats = [];
     if (endTimer) clearTimeout(endTimer);
     $('menu').classList.add('hidden'); $('gameScreen').classList.remove('hidden');
@@ -73,7 +73,7 @@ const Core = (function () {
     inst = cur.make(); timeLeft = cur.time;
     $('scoreVal').textContent = '0'; goalMax = cur.goal; setGoal(0, cur.goal, cur.goalLabel);
     inst.reset(); updateTime();
-    state = 'intro';
+    state = 'intro'; checkOrient();
     showOverlay({ title: cur.title, text: cur.how, edu: '', b1: 'Jugar', f1: startPlay, b2: 'Menú', f2: showMenu, thumb: true });
   }
   function startPlay() {
@@ -83,7 +83,7 @@ const Core = (function () {
     state = 'play';
   }
   function retry() { state = 'intro'; startPlay(); }
-  function finish(win, text) {
+  function finish(win, text, opts) {
     if (state !== 'play') return;
     state = 'ending'; sfx(win ? 'win' : 'lose');
     endTimer = setTimeout(() => {
@@ -93,7 +93,8 @@ const Core = (function () {
         title: win ? '¡Muy bien!' : '¡Se acabó el tiempo!',
         text: text + ' · Puntos: ' + score,
         edu: CONFIG.SHOW_EDU ? EDU[cur.id] : '',
-        b1: 'Volver a jugar', f1: retry, b2: 'Menú', f2: showMenu, thumb: false
+        b1: 'Volver a jugar', f1: retry, b2: 'Menú', f2: showMenu, thumb: false,
+        ...(win && opts && opts.next ? { b1: 'Siguiente nivel', f1: () => { inst.nextLevel(); retry(); }, b2: 'Salir' } : {})
       });
     }, 900);
   }
@@ -144,6 +145,20 @@ const Core = (function () {
     if (canvas.width !== bw) { canvas.width = bw; canvas.height = Math.round(bw * H / W); }
     k = canvas.width / W;
     checkOrient();
+  }
+
+  /* ---------- pantalla completa ---------- */
+  const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+  function lockLandscape() { try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }
+  function goFull(force) {
+    const coarse = window.matchMedia && matchMedia('(pointer:coarse)').matches;
+    if (!coarse && !force) return;
+    const el = document.documentElement, f = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (!f || fsEl()) return;
+    try { const r = f.call(el, { navigationUI: 'hide' }); if (r && r.then) r.then(lockLandscape).catch(() => {}); } catch (e) {}
+  }
+  function toggleFull() {
+    if (fsEl()) { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) {} } else goFull(true);
   }
 
   /* ---------- aviso de girar el celular ---------- */
@@ -204,6 +219,8 @@ const Core = (function () {
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) pauseGame();
     });
+    $('fsBtn').onclick = toggleFull; document.addEventListener('fullscreenchange', () => setTimeout(resize, 150)); document.addEventListener('webkitfullscreenchange', () => setTimeout(resize, 150));
+    if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) $('fsBtn').classList.add('hidden');
     $('rotSkip').onclick = () => { rotSkipped = true; checkOrient(); };
     checkOrient();
     const sp = $('splash');

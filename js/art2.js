@@ -268,7 +268,8 @@
 
   /* ---------- ESCENA DE TUCANES (densa, cada ronda distinta) ---------- */
   const T_ANCHOR = { x: 57, y: 92 }; // pies del tucán dentro del sprite
-  function tucanScene(seed) {
+  function tucanScene(seed, o) {
+    o = o || {};
     const r = rng(seed), W = 960, H = 540, spots = [], tucs = [], perches = [];
     const tsp = A.toucan();
     const cv = mk(W, H, x => {
@@ -289,10 +290,10 @@
       // elegir tucanes
       const cand = perches.filter(p => p.x > 70 && p.x < 890 && p.y > 90 && p.y < 440);
       for (let i = cand.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [cand[i], cand[j]] = [cand[j], cand[i]]; }
-      for (const p of cand) { if (tucs.length >= CONFIG.tucanes.count) break; if (tucs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 170)) tucs.push({ x: p.x, y: p.y, s: .5 + r() * .16, flip: r() < .5, hard: tucs.length }); }
+      for (const p of cand) { if (tucs.length >= CONFIG.tucanes.count) break; if (tucs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 170)) tucs.push({ x: p.x, y: p.y, s: (o.sMin || .56) + r() * (o.sRange || .16), flip: r() < .5, hard: tucs.length }); }
       // señuelos
       const decoyTypes = ['loro', 'guacamayo', 'tangara', 'tordo', 'heli', 'flor', 'fruto'], dcs = [];
-      for (const p of cand.slice().reverse()) { if (dcs.length >= CONFIG.tucanes.decoys) break; if (tucs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 120) && dcs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 70)) dcs.push({ x: p.x, y: p.y, t: decoyTypes[dcs.length % decoyTypes.length], s: .6 + r() * .35, flip: r() < .5 }); }
+      for (const p of cand.slice().reverse()) { if (dcs.length >= (o.decoys || CONFIG.tucanes.decoys)) break; if (tucs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 120) && dcs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 70)) dcs.push({ x: p.x, y: p.y, t: decoyTypes[dcs.length % decoyTypes.length], s: .6 + r() * .35, flip: r() < .5 }); }
       dcs.forEach(d => {
         if (A.BIRDS[d.t]) { A.blit(x, A.bird(d.t), d.x, d.y, d.s, d.flip, null, 0, A.BIRD_FEET.x / 76, A.BIRD_FEET.y / 92); leaf(x, d.x - 10, d.y + 4, 40 * d.s, 9, -1.2, '#3f9a4a'); }
         else if (d.t === 'heli') heliconia(x, d.x, d.y, d.s);
@@ -316,6 +317,8 @@
       for (let i = 0; i < 70; i++) { const px = r() * W, py = r() * H, len = 40 + r() * 56; if (ok(px + len * .4, py, len * .6) && (px < 150 || px > 810 || py < 90 || py > 430 || r() < .45)) leaf(x, px, py, len, 10 + r() * 10, r() * 6.28, ['#2f8a40', '#3f9a4a', '#256a36', '#4aa850'][i % 4]); }
       for (let i = 0; i < 8; i++) { const px = r() * W, py = 40 + r() * 460; if (ok(px, py, 40)) { if (i % 3 === 0) heliconia(x, px, py, .8 + r() * .4); else if (i % 3 === 1) hibiscus(x, px, py, .7 + r() * .4); else frond(x, px, py, 80 + r() * 40, r() * 6.28, (r() - .5), '#2f8a40'); } }
       for (let i = 0; i < 4; i++) { frond(x, -10, 80 + i * 130, 160, -.2 + i * .1, .2, '#25683a'); frond(x, W + 10, 120 + i * 120, 160, Math.PI + .2 - i * .1, -.2, '#25683a'); }
+      // la cabeza y el pico SIEMPRE quedan visibles (se redibujan encima de las hojas)
+      tucs.forEach(t => { const dir = t.flip ? -1 : 1; x.save(); x.translate(t.x, t.y); x.scale(dir * t.s, t.s); x.translate(-T_ANCHOR.x, -T_ANCHOR.y); x.beginPath(); x.rect(66, 12, 70, 52); x.clip(); x.drawImage(tsp, 0, 0, tsp.w, tsp.h); x.restore(); });
       x.fillStyle = rg(x, W / 2, H / 2, 220, 620, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,25,10,.45)']]); x.fillRect(0, 0, W, H);
     });
     return { canvas: cv, spots };
