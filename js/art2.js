@@ -103,7 +103,7 @@
   });
   function crop(n) { return cache('crop' + n, CROPS[n]); }
   const mound = () => cache('mound', () => mk(120, 44, x => {
-    x.fillStyle = rg(x, 60, 20, 4, 60, [[0, '#8a5d36'], [.7, '#684225'], [1, '#4a2c16']]); ell(x, 60, 26, 54, 15); x.fill();
+    x.fillStyle = rg(x, 60, 20, 4, 60, [[0, '#b0603a'], [.7, '#8a4326'], [1, '#5e2a14']]); ell(x, 60, 26, 54, 15); x.fill();
     x.fillStyle = 'rgba(255,220,170,.15)'; ell(x, 54, 20, 30, 7); x.fill();
     const r = rng(8); x.fillStyle = 'rgba(30,15,5,.3)'; for (let i = 0; i < 30; i++) { ell(x, 20 + r() * 80, 18 + r() * 16, 1.6, 1); x.fill(); }
   }));
@@ -138,24 +138,31 @@
   /* ---------- CASA (210x190, suelo en y=176) ---------- */
   function house(burnt) {
     return cache('house' + burnt, () => mk(210, 190, x => {
-      const wood = burnt ? ['#3a322c', '#241e1a'] : ['#a2693a', '#6b4224'], straw = burnt ? ['#4a4038', '#26201b'] : ['#e2bd62', '#a8802c'];
-      x.fillStyle = 'rgba(20,30,10,.3)'; ell(x, 105, 176, 98, 11); x.fill();
-      // paredes
-      x.fillStyle = lg(x, 0, 100, 0, 176, [[0, wood[0]], [1, wood[1]]]); x.fillRect(38, 100, 134, 74);
-      x.strokeStyle = 'rgba(30,15,5,.5)'; x.lineWidth = 1.6; for (let i = 0; i < 17; i++) { x.beginPath(); x.moveTo(42 + i * 8, 100); x.lineTo(42 + i * 8, 174); x.stroke(); }
-      x.fillStyle = burnt ? '#120e0c' : '#2b1a0e'; x.fillRect(92, 116, 28, 58); x.fillStyle = burnt ? '#1e1814' : '#4a2e18'; x.fillRect(88, 112, 36, 6); x.fillRect(88, 112, 4, 62); x.fillRect(120, 112, 4, 62);
-      x.fillStyle = burnt ? '#1e1814' : '#3a2412'; x.fillRect(138, 120, 24, 22); x.fillStyle = burnt ? '#0a0807' : '#18100a'; x.fillRect(141, 123, 18, 16);
-      // techo
-      x.beginPath(); x.moveTo(8, 118); x.quadraticCurveTo(40, 80, 105, 12); x.quadraticCurveTo(170, 80, 202, 118); x.quadraticCurveTo(105, 130, 8, 118); x.closePath();
-      x.fillStyle = lg(x, 0, 12, 0, 124, [[0, straw[0]], [1, straw[1]]]); x.fill();
-      x.save(); x.clip(); const r = rng(burnt ? 5 : 6);
-      x.strokeStyle = shade(straw[1], -.25); x.lineWidth = 1.1; x.globalAlpha = .55;
-      for (let i = 0; i < 260; i++) { const px = 8 + r() * 194, py = 12 + r() * 118; x.beginPath(); x.moveTo(px, py); x.lineTo(px + (px < 105 ? -6 : 6) * (.4 + r()), py + 8 + r() * 8); x.stroke(); }
-      x.globalAlpha = .45; x.strokeStyle = shade(straw[0], .3); for (let i = 0; i < 140; i++) { const px = 8 + r() * 194, py = 12 + r() * 118; x.beginPath(); x.moveTo(px, py); x.lineTo(px + (px < 105 ? -5 : 5), py + 9); x.stroke(); }
-      x.globalAlpha = .4; x.strokeStyle = shade(straw[1], -.4); x.lineWidth = 2; [40, 66, 92, 112].forEach(y => { x.beginPath(); x.moveTo(0, y + 14); x.quadraticCurveTo(105, y - 6, 210, y + 14); x.stroke(); });
+      const r = rng(burnt ? 5 : 6);
+      const P = burnt ? { th: ['#4a423a', '#2a2420'], wl: ['#3a322b', '#1e1814'], dk: '#0e0b09' } : { th: ['#d8c590', '#a89260'], wl: ['#c9a068', '#5a3a20'], dk: '#2a170a' };
+      x.fillStyle = 'rgba(40,15,5,.35)'; ell(x, 105, 176, 100, 10); x.fill();
+      // techo de paja a dos aguas que casi llega al suelo (casa guaraní)
+      const roof = () => { x.beginPath(); x.moveTo(2, 178); x.quadraticCurveTo(24, 96, 105, 8); x.quadraticCurveTo(186, 96, 208, 178); x.closePath(); };
+      roof(); x.fillStyle = lg(x, 0, 8, 0, 178, [[0, P.th[0]], [1, P.th[1]]]); x.fill();
+      // pared frontal de tabillas horizontales
+      x.beginPath(); x.moveTo(40, 176); x.quadraticCurveTo(52, 112, 105, 46); x.quadraticCurveTo(158, 112, 170, 176); x.closePath();
+      x.fillStyle = P.wl[1]; x.fill(); x.save(); x.clip();
+      for (let y = 46; y < 178; y += 6) { x.fillStyle = lg(x, 0, y, 0, y + 4, [[0, P.wl[0]], [1, shade(P.wl[0], -.25)]]); x.fillRect(30, y, 150, 4); }
+      x.fillStyle = 'rgba(0,0,0,.18)'; x.fillRect(100, 46, 10, 132);
       x.restore();
-      x.strokeStyle = shade(straw[1], -.35); x.lineWidth = 2.4; x.beginPath(); x.moveTo(8, 118); x.quadraticCurveTo(105, 130, 202, 118); x.stroke();
-      x.fillStyle = shade(straw[1], -.3); ell(x, 105, 14, 9, 5); x.fill();
+      x.fillStyle = P.dk; x.beginPath(); x.moveTo(88, 176); x.lineTo(88, 128); x.quadraticCurveTo(105, 112, 122, 128); x.lineTo(122, 176); x.closePath(); x.fill();
+      // hebras de paja sobre los bordes y los aleros
+      x.save(); roof(); x.clip();
+      x.lineCap = 'round';
+      for (let n = 0; n < 420; n++) {
+        const t = r(), side = r() < .5 ? -1 : 1, yy = 10 + t * 168, half = 8 + Math.pow(t, .85) * 104, xx = 105 + side * (half * (.55 + r() * .5));
+        if (Math.abs(xx - 105) < 70 * Math.max(0, (yy - 46) / 130) + 4 && yy > 50 && xx > 44 && xx < 166 && yy > 46 + (1 - Math.abs(xx - 105) / 66) * 0) continue;
+        x.strokeStyle = shade(P.th[r() < .5 ? 0 : 1], (r() - .45) * .3); x.lineWidth = .8 + r() * 1.2; x.globalAlpha = .75;
+        x.beginPath(); x.moveTo(xx, yy); x.lineTo(xx + side * (3 + r() * 7), yy + 8 + r() * 12); x.stroke();
+      }
+      x.globalAlpha = 1; x.restore();
+      x.strokeStyle = shade(P.th[1], -.35); x.lineWidth = 3; x.beginPath(); x.moveTo(2, 178); x.quadraticCurveTo(24, 96, 105, 8); x.quadraticCurveTo(186, 96, 208, 178); x.stroke();
+      x.strokeStyle = shade(P.th[1], -.15); x.lineWidth = 6; x.beginPath(); x.moveTo(2, 178); x.lineTo(40, 178); x.moveTo(170, 178); x.lineTo(208, 178); x.stroke();
     }));
   }
 
@@ -206,8 +213,8 @@
       x.fillStyle = 'rgba(230,245,210,.28)'; x.fillRect(0, 250, 960, 110);
       // suelo
       x.fillStyle = lg(x, 0, 340, 0, 540, [[0, '#7fa84a'], [.35, '#5f8c3a'], [1, '#34592a']]); x.beginPath(); x.moveTo(0, 352); x.quadraticCurveTo(480, 330, 960, 356); x.lineTo(960, 540); x.lineTo(0, 540); x.closePath(); x.fill();
-      x.fillStyle = 'rgba(184,140,84,.55)'; x.beginPath(); x.moveTo(-20, 440); x.bezierCurveTo(260, 392, 620, 420, 980, 392); x.lineTo(980, 500); x.bezierCurveTo(640, 470, 280, 490, -20, 505); x.closePath(); x.fill();
-      x.fillStyle = 'rgba(230,200,150,.35)'; x.beginPath(); x.moveTo(-20, 452); x.bezierCurveTo(260, 410, 620, 434, 980, 408); x.lineTo(980, 420); x.bezierCurveTo(640, 446, 260, 424, -20, 466); x.fill();
+      x.fillStyle = 'rgba(176,82,46,.78)'; x.beginPath(); x.moveTo(-20, 440); x.bezierCurveTo(260, 392, 620, 420, 980, 392); x.lineTo(980, 500); x.bezierCurveTo(640, 470, 280, 490, -20, 505); x.closePath(); x.fill();
+      x.fillStyle = 'rgba(214,120,76,.4)'; x.beginPath(); x.moveTo(-20, 452); x.bezierCurveTo(260, 410, 620, 434, 980, 408); x.lineTo(980, 420); x.bezierCurveTo(640, 446, 260, 424, -20, 466); x.fill();
       for (let i = 0; i < 160; i++) tuft(x, r() * 960, 360 + r() * 180, 9 + r() * 14, ['#6aa03a', '#4a8a30', '#86b848'][i % 3], r);
       for (let i = 0; i < 40; i++) { const px = r() * 960, py = 370 + r() * 160; x.fillStyle = ['#fff2a0', '#ffffff', '#ff9ab8'][i % 3]; ell(x, px, py, 2.2, 2.2); x.fill(); }
       for (let i = 0; i < 9; i++) { const px = r() * 900 + 30, py = 400 + r() * 120; x.fillStyle = lg(x, 0, py - 6, 0, py + 6, [[0, '#a9a49a'], [1, '#6b675e']]); ell(x, px, py, 10 + r() * 8, 5 + r() * 3); x.fill(); }
@@ -235,13 +242,13 @@
   function fieldBG() {
     return cache('fieldBG', () => mk(960, 540, x => {
       const r = rng(55);
-      sky(x, 960, 200, [[0, '#4a9a5a'], [.6, '#a9d49a'], [1, '#e4f2c0']]);
+      sky(x, 960, 200, [[0, '#2f7fd0'], [.55, '#8cc4ee'], [1, '#dcefd0']]);
       x.fillStyle = rg(x, 760, 40, 10, 300, [[0, 'rgba(255,250,210,.9)'], [1, 'rgba(255,250,210,0)']]); x.fillRect(0, 0, 960, 300);
       farTrees(x, 960, 175, r, [{ n: 15, h: 90, r: 40, col: '#8fba8a', trunk: '#7a9a80' }, { n: 12, h: 110, r: 46, col: '#4f8e50', trunk: '#3a5a36' }]);
       for (let i = 0; i < 5; i++) { const px = 80 + i * 210 + r() * 60; trunk(x, px, 60, 190, 7, '#7a6a52', r); for (let j = 0; j < 7; j++) frond(x, px, 60, 70 + r() * 25, -Math.PI / 2 + (j - 3) * .5, .25 * (j < 3 ? -1 : 1), '#3b8c44'); }
-      x.fillStyle = lg(x, 0, 170, 0, 540, [[0, '#7a5a34'], [.4, '#6b4626'], [1, '#4a2e18']]); x.beginPath(); x.moveTo(0, 178); x.quadraticCurveTo(480, 164, 960, 180); x.lineTo(960, 540); x.lineTo(0, 540); x.closePath(); x.fill();
-      x.strokeStyle = 'rgba(30,15,5,.28)'; x.lineWidth = 3; for (let k = -14; k <= 14; k++) { x.beginPath(); x.moveTo(480 + k * 16, 180); x.lineTo(480 + k * 120, 545); x.stroke(); }
-      x.strokeStyle = 'rgba(255,220,170,.1)'; x.lineWidth = 2; for (let k = -14; k <= 14; k++) { x.beginPath(); x.moveTo(486 + k * 16, 180); x.lineTo(490 + k * 120, 545); x.stroke(); }
+      x.fillStyle = lg(x, 0, 170, 0, 540, [[0, '#b0562f'], [.4, '#9a4626'], [1, '#6a2e16']]); x.beginPath(); x.moveTo(0, 178); x.quadraticCurveTo(480, 164, 960, 180); x.lineTo(960, 540); x.lineTo(0, 540); x.closePath(); x.fill();
+      x.strokeStyle = 'rgba(60,20,8,.32)'; x.lineWidth = 3; for (let k = -14; k <= 14; k++) { x.beginPath(); x.moveTo(480 + k * 16, 180); x.lineTo(480 + k * 120, 545); x.stroke(); }
+      x.strokeStyle = 'rgba(255,170,120,.14)'; x.lineWidth = 2; for (let k = -14; k <= 14; k++) { x.beginPath(); x.moveTo(486 + k * 16, 180); x.lineTo(490 + k * 120, 545); x.stroke(); }
       for (let i = 0; i < 70; i++) tuft(x, r() * 960, 190 + r() * 350, 8 + r() * 10, ['#6aa03a', '#4a8a30'][i % 2], r);
       for (let i = 0; i < 40; i++) { x.fillStyle = 'rgba(30,15,5,.3)'; ell(x, r() * 960, 200 + r() * 340, 2 + r() * 3, 1.3); x.fill(); }
       for (let i = 0; i < 5; i++) frond(x, -10, 520 - i * 14, 120, -.5 - i * .1, .1, '#2c7a38');
@@ -251,21 +258,19 @@
   function villageBG() {
     return cache('villageBG', () => mk(960, 540, x => {
       const r = rng(77);
-      sky(x, 960, 260, [[0, '#2f7a45'], [.55, '#95c986'], [1, '#e1f0b6']]);
-      x.fillStyle = rg(x, 480, 50, 10, 340, [[0, 'rgba(255,250,210,.9)'], [1, 'rgba(255,250,210,0)']]); x.fillRect(0, 0, 960, 400);
-      farTrees(x, 960, 230, r, [{ n: 15, h: 110, r: 46, col: '#8fba8a', trunk: '#7a9a80' }, { n: 12, h: 140, r: 54, col: '#4f8e50', trunk: '#3a5a36' }, { n: 9, h: 160, r: 62, col: '#3a7a42', trunk: '#3a5a36' }]);
-      x.fillStyle = lg(x, 0, 220, 0, 540, [[0, '#86ad52'], [.3, '#a98a58'], [1, '#8a6a40']]); x.beginPath(); x.moveTo(0, 236); x.quadraticCurveTo(480, 214, 960, 238); x.lineTo(960, 540); x.lineTo(0, 540); x.closePath(); x.fill();
-      x.fillStyle = rg(x, 480, 400, 10, 440, [[0, 'rgba(214,180,120,.75)'], [1, 'rgba(214,180,120,0)']]); x.fillRect(0, 240, 960, 300);
-      for (let i = 0; i < 140; i++) tuft(x, r() * 960, 245 + r() * 295, 8 + r() * 12, ['#6aa03a', '#4a8a30', '#86b848'][i % 3], r);
-      for (let i = 0; i < 40; i++) { x.fillStyle = 'rgba(70,40,15,.18)'; ell(x, r() * 960, 270 + r() * 270, 5 + r() * 9, 2 + r() * 3); x.fill(); }
-      trunk(x, 24, -10, 545, 34, '#6a4a2c', r); trunk(x, 940, -10, 545, 32, '#654528', r);
-      for (let i = 0; i < 8; i++) frond(x, 24, 20, 150 + r() * 50, .2 + i * .3, .35, ['#2f7a3a', '#3b8c44'][i % 2]);
-      for (let i = 0; i < 8; i++) frond(x, 940, 20, 150 + r() * 50, Math.PI - .2 - i * .3, -.35, ['#2f7a3a', '#3b8c44'][i % 2]);
-      for (let i = 0; i < 4; i++) frond(x, -10, 520 - i * 16, 120, -.5 - i * .12, .1, '#2c7a38');
-      for (let i = 0; i < 4; i++) frond(x, 970, 520 - i * 16, 120, Math.PI + .5 + i * .12, -.1, '#2c7a38');
+      sky(x, 960, 300, [[0, '#2a78cc'], [.5, '#6fb2ea'], [1, '#cfe8f6']]);
+      for (let i = 0; i < 6; i++) { const cx = 60 + r() * 840, cy = 40 + r() * 120; for (let k = 0; k < 6; k++) { x.fillStyle = 'rgba(255,255,255,' + (.55 + r() * .3) + ')'; ell(x, cx + (k - 3) * 22, cy + (r() - .5) * 10, 28 + r() * 14, 12 + r() * 6); x.fill(); } }
+      farTrees(x, 960, 262, r, [{ n: 16, h: 70, r: 34, col: '#6f9a62', trunk: '#5a7a50' }, { n: 12, h: 100, r: 44, col: '#4f8348', trunk: '#3f5f38' }]);
+      // árboles sueltos de monte abierto
+      for (let i = 0; i < 7; i++) { const px = 40 + i * 150 + r() * 70, h = 90 + r() * 60; x.strokeStyle = '#4a3a28'; x.lineWidth = 6; x.lineCap = 'round'; x.beginPath(); x.moveTo(px, 270); x.quadraticCurveTo(px + 8, 270 - h * .6, px - 6, 270 - h); x.stroke(); blob(x, px - 4, 270 - h - 10, 40 + r() * 20, ['#4f8a4a', '#5c9a52', '#437c40'][i % 3], r, 6); }
+      x.fillStyle = lg(x, 0, 250, 0, 540, [[0, '#c4623a'], [.35, '#b4532e'], [1, '#8a3a1e']]); x.beginPath(); x.moveTo(0, 268); x.quadraticCurveTo(480, 248, 960, 270); x.lineTo(960, 540); x.lineTo(0, 540); x.closePath(); x.fill();
+      x.fillStyle = rg(x, 480, 420, 10, 460, [[0, 'rgba(230,140,96,.5)'], [1, 'rgba(230,140,96,0)']]); x.fillRect(0, 260, 960, 280);
+      for (let i = 0; i < 70; i++) { x.fillStyle = 'rgba(70,20,8,.2)'; ell(x, r() * 960, 285 + r() * 255, 6 + r() * 12, 2 + r() * 3); x.fill(); }
+      for (let i = 0; i < 40; i++) tuft(x, r() * 960, 275 + r() * 265, 8 + r() * 12, ['#6aa03a', '#5a8a30', '#86b848'][i % 3], r);
+      for (let i = 0; i < 9; i++) { const px = r() * 960, py = 285 + r() * 240; blob(x, px, py, 18 + r() * 16, ['#3f7a38', '#4a8a40', '#35682f'][i % 3], r, 5); }
+      for (let i = 0; i < 5; i++) { const px = r() < .5 ? -10 + r() * 90 : 880 + r() * 90, py = 300 + r() * 220; blob(x, px, py, 40 + r() * 20, '#3a7434', r, 6); }
     }));
   }
-
   /* ---------- ESCENA DE TUCANES (densa, cada ronda distinta) ---------- */
   const T_ANCHOR = { x: 57, y: 92 }; // pies del tucán dentro del sprite
   function tucanScene(seed, o) {
