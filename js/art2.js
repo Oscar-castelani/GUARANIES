@@ -351,5 +351,46 @@
     x.fillStyle = '#fff'; ell(x, 33.8, 41.2, .8, .8); x.fill(); ell(x, 51.8, 41.2, .8, .8); x.fill();
     x.fillStyle = '#e8c8b8'; [[14, 70], [70, 70]].forEach(p => { ell(x, p[0], p[1], 9, 6); x.fill(); [-4, 0, 4].forEach(d => { x.strokeStyle = '#f4ece0'; x.lineWidth = 1.6; x.beginPath(); x.moveTo(p[0] + d, p[1] - 4); x.lineTo(p[0] + d, p[1] - 9); x.stroke(); }); });
   }));
-  Object.assign(A, { topo, food, FOOD_OK, FOOD_BAD, crop, mound, basketBack, basketFront, bucket, house, flame, huntBG, huntFG, fieldBG, villageBG, tucanScene });
+  /* ---------- NOCHE / LUCIÉRNAGAS ---------- */
+  const fireflyGlow = () => cache('ffGlow', () => mk(96, 96, x => { x.fillStyle = rg(x, 48, 48, 2, 48, [[0, 'rgba(235,255,150,.95)'], [.35, 'rgba(190,255,90,.4)'], [1, 'rgba(160,255,60,0)']]); x.fillRect(0, 0, 96, 96); }, 1));
+  const goldGlow = () => cache('ffGold', () => mk(96, 96, x => { x.fillStyle = rg(x, 48, 48, 2, 48, [[0, 'rgba(255,236,150,.95)'], [.35, 'rgba(255,190,70,.45)'], [1, 'rgba(255,150,30,0)']]); x.fillRect(0, 0, 96, 96); }, 1));
+  function drawFirefly(c, x, y, s, b, gold, t) {
+    const g = gold ? goldGlow() : fireflyGlow(), flick = 1 + Math.sin((t || 0) * 9) * .06, R = 46 * s * (.6 + .4 * b) * flick;
+    c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha *= Math.min(1, b + .1); c.drawImage(g, x - R, y - R, R * 2, R * 2); c.restore();
+    c.save(); c.translate(x, y); c.scale(s, s); const wing = Math.sin((t || 0) * 40) * .25;
+    c.fillStyle = 'rgba(210,235,255,.5)'; c.save(); c.rotate(-.6 + wing); c.beginPath(); c.ellipse(-4, -9, 3.6, 8, 0, 0, 7); c.fill(); c.restore(); c.save(); c.rotate(.6 - wing); c.beginPath(); c.ellipse(4, -9, 3.6, 8, 0, 0, 7); c.fill(); c.restore();
+    c.fillStyle = '#1c1a14'; c.beginPath(); c.ellipse(0, 0, 4.4, 7.5, 0, 0, 7); c.fill(); c.beginPath(); c.arc(0, -8, 3, 0, 7); c.fill();
+    c.fillStyle = gold ? '#ffd54a' : '#d4ff5a'; c.beginPath(); c.ellipse(0, 4.5, 4, 4.8, 0, 0, 7); c.fill(); c.fillStyle = '#fff'; c.globalAlpha *= .8; c.beginPath(); c.ellipse(0, 4, 2, 2.4, 0, 0, 7); c.fill();
+    c.restore();
+  }
+  function drawJar(c, x, y, fill) {
+    c.save(); c.translate(x, y);
+    c.fillStyle = 'rgba(0,0,0,.35)'; ell(c, 0, 40, 34, 7); c.fill();
+    const body = () => { c.beginPath(); c.moveTo(-26, -34); c.quadraticCurveTo(-36, -34, -36, -20); c.lineTo(-36, 26); c.quadraticCurveTo(-36, 40, -22, 40); c.lineTo(22, 40); c.quadraticCurveTo(36, 40, 36, 26); c.lineTo(36, -20); c.quadraticCurveTo(36, -34, 26, -34); c.closePath(); };
+    body(); c.fillStyle = 'rgba(170,210,230,.16)'; c.fill();
+    c.save(); body(); c.clip(); const h = 72 * fill; if (fill > 0) { c.globalCompositeOperation = 'lighter'; c.fillStyle = lg(c, 0, 40 - h, 0, 40, [[0, 'rgba(230,255,140,.55)'], [1, 'rgba(190,255,90,.9)']]); c.fillRect(-40, 40 - h, 80, h); c.drawImage(fireflyGlow(), -50, 40 - h - 40, 100, 100); } c.restore();
+    body(); c.strokeStyle = 'rgba(210,235,255,.85)'; c.lineWidth = 2.5; c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.ellipse(-24, 0, 3, 22, 0, 0, 7); c.fill();
+    c.fillStyle = '#8a6a3a'; c.fillRect(-27, -44, 54, 12); c.strokeStyle = '#4a3418'; c.lineWidth = 1.5; c.strokeRect(-27, -44, 54, 12);
+    c.restore();
+  }
+  function nightBG() {
+    return cache('nightBG', () => mk(960, 540, x => {
+      const r = rng(91);
+      sky(x, 960, 540, [[0, '#050d24'], [.45, '#0b2a3a'], [1, '#0c2c1c']]);
+      for (let i = 0; i < 70; i++) { x.fillStyle = 'rgba(255,255,255,' + (.3 + r() * .6) + ')'; ell(x, r() * 960, r() * 220, .7 + r() * .9, .7 + r() * .9); x.fill(); }
+      x.fillStyle = rg(x, 780, 90, 4, 150, [[0, 'rgba(255,250,225,1)'], [.12, 'rgba(255,250,225,.9)'], [.14, 'rgba(210,235,255,.28)'], [1, 'rgba(210,235,255,0)']]); x.fillRect(560, 0, 400, 300);
+      farTrees(x, 960, 340, r, [{ n: 13, h: 120, r: 50, col: '#18364a', trunk: '#12283a' }, { n: 10, h: 150, r: 60, col: '#12402e', trunk: '#0e2a22' }, { n: 8, h: 180, r: 70, col: '#0c3020', trunk: '#0a2018' }]);
+      x.fillStyle = 'rgba(120,170,210,.16)'; x.fillRect(0, 250, 960, 110);
+      x.fillStyle = lg(x, 0, 330, 0, 540, [[0, '#123a22'], [1, '#07180f']]); x.beginPath(); x.moveTo(0, 360); x.quadraticCurveTo(480, 335, 960, 362); x.lineTo(960, 540); x.lineTo(0, 540); x.closePath(); x.fill();
+      for (let i = 0; i < 120; i++) tuft(x, r() * 960, 370 + r() * 170, 10 + r() * 18, ['#1d5a30', '#164a28', '#256a38'][i % 3], r);
+      trunk(x, 28, -10, 545, 40, '#2a2218', r); trunk(x, 934, -10, 545, 36, '#2a2218', r);
+      for (let i = 0; i < 9; i++) frond(x, 28, 24, 150 + r() * 60, .2 + i * .28, .35, ['#0f4a28', '#14562f', '#0b3c20'][i % 3]);
+      for (let i = 0; i < 9; i++) frond(x, 934, 20, 150 + r() * 60, Math.PI - .2 - i * .28, -.35, ['#0f4a28', '#14562f', '#0b3c20'][i % 3]);
+      for (let i = 0; i < 5; i++) frond(x, -10, 500 - i * 16, 130, -.5 - i * .1, .1, '#0e4a2a');
+      for (let i = 0; i < 5; i++) frond(x, 970, 500 - i * 16, 130, Math.PI + .5 + i * .1, -.1, '#0e4a2a');
+      x.fillStyle = rg(x, 480, 270, 160, 620, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,6,12,.5)']]); x.fillRect(0, 0, 960, 540);
+    }));
+  }
+  Object.assign(A, { nightBG, drawFirefly, drawJar, fireflyGlow, topo, food, FOOD_OK, FOOD_BAD, crop, mound, basketBack, basketFront, bucket, house, flame, huntBG, huntFG, fieldBG, villageBG, tucanScene });
 })(Art);

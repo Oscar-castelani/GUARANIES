@@ -223,7 +223,7 @@ const Core = (function () {
   }
 
   function buildMenu() {
-    const box = $('cards');
+    const box = $('cards'); box.style.setProperty('--n', order.length);
     order.forEach(id => {
       const g = games[id], b = document.createElement('button'); b.className = 'card';
       const c = document.createElement('canvas'); c.width = 440; c.height = 280; g.thumb(c.getContext('2d'), 440, 280);

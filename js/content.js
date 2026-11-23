@@ -8,6 +8,7 @@ const CONFIG = {
   tucanes: { time: 90, count: 5, decoys: 12, pointsEach: 10 },
   canasta: { time: 75, goal: 25, pointsEach: 10, onField: 6 },          // goal: PROVISIONAL
   cosecha: { time: 90, goal: 40, spawn: 1.15, lifeMin: 3.6, lifeMax: 4.7, pointsEach: 10 }, // goal: PROVISIONAL
+  luciernagas: { time: 60, goal: 30 },                                // goal: PROVISIONAL
   fuego:   { time: 60, cooldown: 0.75, maxFires: 7, housesToWin: 2, splashRadius: 62 }     // umbrales: PROVISIONALES
 };
 const EDU = {
@@ -15,5 +16,6 @@ const EDU = {
   tucanes: 'Los tucanes forman parte de la fauna de las selvas de la región.',
   canasta: 'El maíz, la mandioca y el zapallo son cultivos importantes en la alimentación de distintas comunidades guaraníes.',
   cosecha: 'La agricultura fue una actividad importante para muchas comunidades guaraníes.',
+  luciernagas: 'Las luciérnagas son insectos que producen su propia luz.',
   fuego:   'Juego ficticio: cuidar la vegetación y prevenir incendios es importante hoy para proteger el entorno.'
 };

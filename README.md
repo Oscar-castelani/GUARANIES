@@ -11,6 +11,7 @@ Al abrir muestra 3 segundos la portada (`assets/portada.jpg`, reemplazable) y lu
 | Llená la canasta | 75 s | 25 alimentos correctos (provisional) con distractores |
 | Cosecha rápida | 90 s | 40 cosechas (provisional); más rápido y más topos con el tiempo |
 | Apagá el fuego | 60 s | Salvar ≥2 de 4 casas (provisional); agua ilimitada, pausa 0,75 s |
+| Luciérnagas en la noche | 60 s | 30 luces (provisional); las doradas valen más |
 
 Todos los valores están en `js/content.js` (`CONFIG`) para ajustarlos tras las pruebas. Los textos educativos (`EDU`) son **borradores sin verificar**; poné `SHOW_EDU:false` hasta validarlos.
 
