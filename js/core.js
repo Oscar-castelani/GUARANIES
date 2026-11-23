@@ -3,7 +3,7 @@
 const Core = (function () {
   const W = 960, H = 540;
   const games = {}, order = [];
-  let canvas, ctx, k = 1;
+  let canvas, ctx, k = 1, ambCtx, frameN = 0;
   let cur = null, inst = null, state = 'menu'; // menu | intro | play | ending | end | pause
   let score = 0, timeLeft = 0, goalMax = 0, goalVal = 0;
   let muted = false, aCtx = null, last = 0, floats = [], endTimer = null;
@@ -193,6 +193,7 @@ const Core = (function () {
     } else if (state === 'ending') inst.update(dt);
     ctx.setTransform(k, 0, 0, k, 0, -view.offY * k);
     inst.draw(ctx);
+    if ((++frameN & 7) === 0) { try { ambCtx.drawImage(canvas, 0, 0, 64, 36); } catch (e) {} }
     floats = floats.filter(f => (f.t += dt) < 1.1);
     for (const f of floats) {
       ctx.globalAlpha = Math.min(1, 2.2 - f.t * 2); ctx.font = 'bold 26px Georgia,serif'; ctx.textAlign = 'center';
@@ -215,7 +216,7 @@ const Core = (function () {
   }
 
   function init() {
-    canvas = $('c'); ctx = canvas.getContext('2d');
+    canvas = $('c'); ctx = canvas.getContext('2d'); ambCtx = $('amb').getContext('2d');
     try { muted = localStorage.getItem('ag_muted') === '1'; } catch (e) {}
     buildMenu(); bindInput(); setMuted(muted);
     $('backBtn').onclick = showMenu;
@@ -226,6 +227,14 @@ const Core = (function () {
     });
     $('fsBtn').onclick = toggleFull; document.addEventListener('fullscreenchange', () => setTimeout(resize, 150)); document.addEventListener('webkitfullscreenchange', () => setTimeout(resize, 150));
     if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) $('fsBtn').classList.add('hidden');
+    try {
+      const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const standalone = window.navigator.standalone || (window.matchMedia && matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches);
+      if (ios && !standalone && localStorage.getItem('ag_ios_tip') !== '1') {
+        $('iosTip').classList.remove('hidden');
+        $('iosTipOk').onclick = () => { $('iosTip').classList.add('hidden'); try { localStorage.setItem('ag_ios_tip', '1'); } catch (e) {} };
+      }
+    } catch (e) {}
     $('rotSkip').onclick = () => { rotSkipped = true; checkOrient(); };
     checkOrient();
     const sp = $('splash');

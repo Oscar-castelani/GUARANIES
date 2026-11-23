@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f4d2b">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Aventura Guaraní">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
 <title>Aventura Guaraní</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -29,6 +36,7 @@
     <button id="muteBtn" class="chip" aria-label="Silenciar sonido" aria-pressed="false">Sonido</button>
   </div>
   <div id="stage">
+    <canvas id="amb" width="64" height="36" aria-hidden="true"></canvas>
     <canvas id="c" aria-label="Zona de juego"></canvas>
     <div id="rotateHint" class="hidden">Girá el celular en horizontal para jugar mejor</div>
     <div id="overlay" class="hidden" role="dialog" aria-modal="true">
@@ -52,6 +60,7 @@
     <button id="rotSkip" class="chip">Seguir en vertical</button>
   </div>
 </div>
+<div id="iosTip" class="hidden"><span>Para jugar a <b>pantalla completa</b> en iPhone: tocá <b>Compartir</b> y luego <b>Agregar a pantalla de inicio</b>.</span><button id="iosTipOk" class="chip">Entendido</button></div>
 <script src="js/content.js"></script>
 <script src="js/art.js"></script>
 <script src="js/art2.js"></script>
