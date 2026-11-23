@@ -6,11 +6,11 @@ Al abrir muestra 3 segundos la portada (`assets/portada.jpg`, reemplazable) y lu
 ## Juegos
 | Juego | Tiempo | Meta |
 |---|---|---|
-| Arco y flecha | 40 s | 6 animales; máx. 3 en pantalla; flechas ilimitadas, pausa 0,85 s |
-| Encontrá los tucanes | 45 s | 5 tucanes; escena nueva en cada partida; 12 señuelos |
-| Llená la canasta | 25 s | 6 alimentos correctos (provisional) con distractores |
-| Cosecha rápida | 40 s | 15 cosechas (provisional); aparece cada ~1,15 s, dura 3,6–4,7 s |
-| Apagá el fuego | 30 s | Salvar ≥2 de 4 casas (provisional); agua ilimitada, pausa 0,75 s |
+| Arco y flecha | 120 s | 30 animales; cada acierto acelera el juego; flechas ilimitadas, pausa 0,85 s |
+| Encontrá los tucanes | 90 s | 5 tucanes por nivel; niveles que suben la dificultad |
+| Llená la canasta | 60 s | 15 alimentos correctos (provisional) con distractores |
+| Cosecha rápida | 90 s | 40 cosechas (provisional); más rápido y más topos con el tiempo |
+| Apagá el fuego | 60 s | Salvar ≥2 de 4 casas (provisional); agua ilimitada, pausa 0,75 s |
 
 Todos los valores están en `js/content.js` (`CONFIG`) para ajustarlos tras las pruebas. Los textos educativos (`EDU`) son **borradores sin verificar**; poné `SHOW_EDU:false` hasta validarlos.
 

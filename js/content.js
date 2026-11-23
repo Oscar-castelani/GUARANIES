@@ -4,11 +4,11 @@
    Ponelos en SHOW_EDU=false si querés ocultarlos hasta validarlos con fuentes. */
 const CONFIG = {
   SHOW_EDU: true,
-  arco:    { time: 75, goal: 20, maxAnimals: 3, cooldown: 0.85, points: { carpincho: 10, venado: 20, pecari: 15 } },
-  tucanes: { time: 45, count: 5, decoys: 12, pointsEach: 10 },
-  canasta: { time: 25, goal: 6, pointsEach: 10, onField: 6 },          // goal: PROVISIONAL
-  cosecha: { time: 50, goal: 20, spawn: 1.15, lifeMin: 3.6, lifeMax: 4.7, pointsEach: 10 }, // goal: PROVISIONAL
-  fuego:   { time: 30, cooldown: 0.75, maxFires: 7, housesToWin: 2, splashRadius: 62 }     // umbrales: PROVISIONALES
+  arco:    { time: 120, goal: 30, maxAnimals: 3, cooldown: 0.85, points: { carpincho: 10, venado: 20, pecari: 15 } },
+  tucanes: { time: 90, count: 5, decoys: 12, pointsEach: 10 },
+  canasta: { time: 60, goal: 15, pointsEach: 10, onField: 6 },          // goal: PROVISIONAL
+  cosecha: { time: 90, goal: 40, spawn: 1.15, lifeMin: 3.6, lifeMax: 4.7, pointsEach: 10 }, // goal: PROVISIONAL
+  fuego:   { time: 60, cooldown: 0.75, maxFires: 7, housesToWin: 2, splashRadius: 62 }     // umbrales: PROVISIONALES
 };
 const EDU = {
   arco:    'La caza fue una de las actividades para obtener alimentos, junto con la agricultura, la pesca y la recolección.',
