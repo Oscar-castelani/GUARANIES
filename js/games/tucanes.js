@@ -5,10 +5,10 @@ Core.register({
   how: 'Hay ' + CONFIG.tucanes.count + ' tucanes escondidos en la selva. Tocá cada uno cuando lo encuentres. ¡Cuidado con otras aves y flores parecidas!',
   thumb(c, w, h) { c.fillStyle = Art.lg(c, 0, 0, 0, h, [[0, '#2f7a3e'], [1, '#17482c']]); c.fillRect(0, 0, w, h); const r = Art.rng(4); for (let i = 0; i < 40; i++) Art.leaf(c, r() * w, r() * h, 30 + r() * 40, 9, r() * 6.28, ['#2f8a40', '#3f9a4a', '#256a36'][i % 3]); Art.blit(c, Art.toucan(), w * .55, h * .5, 1.6, false); for (let i = 0; i < 14; i++) Art.leaf(c, r() * w, r() * h, 50 + r() * 40, 12, r() * 6.28, ['#2f8a40', '#4aa850'][i % 2]); },
   make() {
-    let scene, found, t, rings, misses, idle, level = 1;
+    let filler, scene, found, t, rings, misses, idle, level = 1;
     return {
       nextLevel() { level++; },
-      reset() { Core.setGoal(0, CONFIG.tucanes.count, 'Nivel ' + level); scene = Art.tucanScene((Math.random() * 1e9) | 0, { decoys: Math.min(20, 8 + (level - 1) * 3), sMin: Math.max(.38, .56 - (level - 1) * .05), sRange: .14 }); found = 0; t = 0; idle = 0; rings = []; misses = []; },
+      reset() { filler = Art.cache('tucFiller', () => Art.tucanScene(4242, { count: 0, decoys: 0 }).canvas); Core.setGoal(0, CONFIG.tucanes.count, 'Nivel ' + level); scene = Art.tucanScene((Math.random() * 1e9) | 0, { decoys: Math.min(20, 8 + (level - 1) * 3), sMin: Math.max(.38, .56 - (level - 1) * .05), sRange: .14 }); found = 0; t = 0; idle = 0; rings = []; misses = []; },
       down(x, y) {
         for (const s of scene.spots) {
           if (s.found) continue;
@@ -23,7 +23,7 @@ Core.register({
       },
       update(dt) { t += dt; idle += dt; misses.forEach(m => m.t += dt); misses = misses.filter(m => m.t < .5); },
       draw(c) {
-        c.drawImage(scene.canvas, 0, 0, 960, 540);
+        Core.drawBg(c, scene.canvas, filler);
         for (const s of scene.spots) {
           if (!s.found) continue;
           const pulse = 1 + Math.sin(t * 4) * .04, rr = s.r * pulse;
@@ -38,6 +38,7 @@ Core.register({
         for (let i = 0; i < CONFIG.tucanes.count; i++) Art.blit(c, Art.toucan(), 724 + i * 48, 90, .44, false, i < found ? 1 : .25);
         c.restore();
       },
+      dbg() { return scene.spots; },
       timeUp() { Core.finish(false, 'Encontraste ' + found + ' de ' + CONFIG.tucanes.count + ' tucanes'); }
     };
   }

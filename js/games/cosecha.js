@@ -41,7 +41,7 @@ Core.register({
         for (const p of parts) { p.t += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 520 * dt; } parts = parts.filter(p => p.t < .7);
       },
       draw(c) {
-        c.drawImage(bg, 0, 0, 960, 540);
+        Core.drawBg(c, bg);
         spots.forEach(s => Art.blit(c, Art.mound(), s.x, s.y, s.s * .95, false, .9));
         for (const m of moles) { const s = m.sp.s, rise = m.state === 'hit' ? Math.max(0, 1 - m.ht / .3) : Math.min(1, m.age / .25) * (m.life - m.age < .3 ? (m.life - m.age) / .3 : 1); c.save(); c.beginPath(); c.rect(m.sp.x - 70, m.sp.y - 130, 140, 136); c.clip(); Art.blit(c, Art.topo(), m.sp.x + (m.state === 'hit' ? Math.sin(m.ht * 50) * 4 : 0), m.sp.y + 6 + (1 - rise) * 70 * s, 1.15 * s, false, 1, 0, .5, 1); c.restore(); }
         const list = crops.filter(cr => cr.state === 'grow' || cr.state === 'gone').sort((a, b) => a.sp.y - b.sp.y);
@@ -58,6 +58,7 @@ Core.register({
         Art.blit(c, Art.basketFront(), BASKET.x, BASKET.y + 36, .7, false, 1, 0, .5, 1);
         for (const p of parts) { c.globalAlpha = 1 - p.t / .7; c.fillStyle = p.c; c.beginPath(); c.arc(p.x, p.y, 3.4, 0, 7); c.fill(); } c.globalAlpha = 1;
       },
+      dbg() { return { crops: crops.filter(c => c.state === 'grow').map(c => ({ x: c.sp.x, y: c.sp.y - 40 * c.sp.s })), moles: moles.map(m => ({ x: m.sp.x, y: m.sp.y - 30 * m.sp.s })), got }; },
       timeUp() { Core.finish(false, 'Cosechaste ' + got + ' de ' + C.goal + ' cultivos'); }
     };
   }

@@ -60,7 +60,7 @@ Core.register({
         const need = C.onField - items.length; for (let i = 0; i < need; i++) addItem();
       },
       draw(c) {
-        c.drawImage(bgc, 0, 0, 960, 540);
+        Core.drawBg(c, bgc);
         const sorted = items.slice().sort((a, b) => (a.state === 'drag') - (b.state === 'drag') || a.y - b.y);
         const inside = sorted.filter(i => i.state === 'in' && i.st > .55), others = sorted.filter(i => !(i.state === 'in' && i.st > .55));
         const drawItem = i => {
@@ -85,6 +85,7 @@ Core.register({
         // indicador de zona al arrastrar
         if (drag) { c.save(); c.setLineDash([12, 8]); c.lineDashOffset = -t * 24; c.strokeStyle = inZone(drag.it.x, drag.it.y) ? '#fff7b0' : 'rgba(255,255,255,.55)'; c.lineWidth = 4; c.beginPath(); c.ellipse(ZONE.x, ZONE.y, ZONE.rx, ZONE.ry, 0, 0, 7); c.stroke(); c.restore(); }
       },
+      dbg() { return items.map(i => ({ kind: i.kind, x: i.x, y: i.y, state: i.state })); },
       timeUp() { Core.finish(false, 'Pusiste ' + got + ' de ' + C.goal + ' alimentos'); }
     };
   }

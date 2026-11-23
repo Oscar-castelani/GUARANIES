@@ -71,3 +71,10 @@ html,body{margin:0;height:100%;overscroll-behavior:none;position:fixed;inset:0;w
 #gameScreen:not(.hidden)~#iosTip{display:none}
 #iosTip span{flex:1}
 @media (max-height:460px){#iosTip{font-size:12px;padding:6px 10px;bottom:4px}}
+
+/* celular horizontal: el juego ocupa toda la pantalla y la barra flota encima */
+body.hudov #stage{position:absolute;inset:0}
+body.hudov #hud{position:absolute;left:0;right:0;top:0;z-index:20;background:linear-gradient(rgba(6,20,12,.82),rgba(6,20,12,.45) 70%,rgba(6,20,12,0));min-height:36px;text-shadow:0 1px 2px #000}
+/* BUGFIX: el lienzo (z-index:1) tapaba el panel de inicio y los botones no recibían toques */
+#overlay{z-index:10}
+#rotateHint{z-index:10}

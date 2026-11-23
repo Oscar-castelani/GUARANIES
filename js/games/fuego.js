@@ -55,7 +55,7 @@ Core.register({
         Core.setGoal(houseCount());
       },
       draw(c) {
-        c.drawImage(bg, 0, 0, 960, 540);
+        Core.drawBg(c, bg);
         const objs = houses.map(h => ({ y: h.y, h })).concat(fires.map(f => ({ y: f.y + 1, f })).sort((a, b) => a.y - b.y)).sort((a, b) => a.y - b.y);
         for (const o of objs) {
           if (o.h) {
@@ -81,6 +81,7 @@ Core.register({
         const rot = pour ? Math.min(.95, Math.sin(Math.min(1, pour.t / .45) * Math.PI) * 1.0) : 0;
         Art.blit(c, Art.bucket(), bucket.x, bucket.y, 1.15, false, 1, rot, .5, .5);
       },
+      dbg() { return { fires: fires.map(f => ({ x: f.x, y: f.y - 20 })), houses: houses.map(h => h.hp), putout }; },
       timeUp() { const n = houseCount(), ok = n >= C.housesToWin; Core.setGoal(n); Core.finish(ok, ok ? 'Salvaste ' + n + ' de 4 casas y apagaste ' + putout + ' fuegos' : 'Quedaron ' + n + ' de 4 casas a salvo (necesitabas ' + C.housesToWin + ')'); }
     };
   }

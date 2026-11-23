@@ -2,7 +2,7 @@
 
 Script reproducible: `docs/audit-pantallas.js` (Playwright + Chromium; desde la raíz del proyecto: `node docs/audit-pantallas.js`).
 Prueba 17 tamaños (280×653 hasta 1180×820), cada uno en vertical y horizontal, con emulación táctil. En cada uno revisa:
-portada, aviso de girar, menú sin scroll ni tarjetas fuera de pantalla, panel de inicio y de fin de cada uno de los 5 juegos,
+portada, aviso de girar (solo al entrar a un juego), menú sin scroll ni tarjetas fuera de pantalla, panel de inicio y de fin de cada uno de los 5 juegos,
 botones visibles (≥40 px), barra superior sin desbordar, lienzo dentro de la pantalla, página sin scroll y errores de JS.
 
 **Resultado final: sin fallos** (el único aviso que queda es un artefacto del script: 717×512 ya es horizontal).

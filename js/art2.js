@@ -288,12 +288,12 @@
       for (let i = 0; i < 130; i++) leaf(x, r() * W, r() * H, 30 + r() * 44, 8 + r() * 8, r() * 6.28, ['#2f8a40', '#3f9a4a', '#256a36', '#4aa850', '#357a3c'][Math.floor(r() * 5)]);
       for (let i = 0; i < 14; i++) frond(x, r() * W, r() * H, 60 + r() * 60, r() * 6.28, (r() - .5) * .8, ['#2f7a3a', '#3b8c44'][i % 2]);
       // elegir tucanes
-      const cand = perches.filter(p => p.x > 70 && p.x < 890 && p.y > 90 && p.y < 440);
+      const cand = perches.filter(p => p.x > 70 && p.x < 890 && p.y > 120 && p.y < 440);
       for (let i = cand.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [cand[i], cand[j]] = [cand[j], cand[i]]; }
-      for (const p of cand) { if (tucs.length >= CONFIG.tucanes.count) break; if (tucs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 170)) tucs.push({ x: p.x, y: p.y, s: (o.sMin || .56) + r() * (o.sRange || .16), flip: r() < .5, hard: tucs.length }); }
+      for (const p of cand) { if (tucs.length >= (o.count != null ? o.count : CONFIG.tucanes.count)) break; if (tucs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 170)) tucs.push({ x: p.x, y: p.y, s: (o.sMin || .56) + r() * (o.sRange || .16), flip: r() < .5, hard: tucs.length }); }
       // señuelos
       const decoyTypes = ['loro', 'guacamayo', 'tangara', 'tordo', 'heli', 'flor', 'fruto'], dcs = [];
-      for (const p of cand.slice().reverse()) { if (dcs.length >= (o.decoys || CONFIG.tucanes.decoys)) break; if (tucs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 120) && dcs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 70)) dcs.push({ x: p.x, y: p.y, t: decoyTypes[dcs.length % decoyTypes.length], s: .6 + r() * .35, flip: r() < .5 }); }
+      for (const p of cand.slice().reverse()) { if (dcs.length >= (o.decoys != null ? o.decoys : CONFIG.tucanes.decoys)) break; if (tucs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 120) && dcs.every(q => Math.hypot(q.x - p.x, q.y - p.y) > 70)) dcs.push({ x: p.x, y: p.y, t: decoyTypes[dcs.length % decoyTypes.length], s: .6 + r() * .35, flip: r() < .5 }); }
       dcs.forEach(d => {
         if (A.BIRDS[d.t]) { A.blit(x, A.bird(d.t), d.x, d.y, d.s, d.flip, null, 0, A.BIRD_FEET.x / 76, A.BIRD_FEET.y / 92); leaf(x, d.x - 10, d.y + 4, 40 * d.s, 9, -1.2, '#3f9a4a'); }
         else if (d.t === 'heli') heliconia(x, d.x, d.y, d.s);

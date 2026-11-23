@@ -14,7 +14,7 @@ for(const [name,w0,h0] of sizes){ for(const land of [false,true]){
   await p.evaluate(()=>{const s=document.getElementById('splash');s&&s.dispatchEvent(new PointerEvent('pointerdown'))});await p.waitForTimeout(700);
   const portraitPhone=!land&&Math.min(w,h)<700;
   const notice=await p.evaluate(()=>!document.getElementById('rotate').classList.contains('hidden'));
-  if(portraitPhone&&!notice)F(tag,'rotate notice not shown');
+  if(notice)F(tag,'rotate notice shown on the cover/menu (must only show inside a game)');
   if(notice){const r=await p.evaluate(()=>{const e=document.querySelector('.rot-box').getBoundingClientRect();return [e.left,e.top,e.right,e.bottom]});if(r[0]<0||r[2]>w||r[1]<0||r[3]>h)F(tag,'rotate box overflows '+r);
     await p.evaluate(()=>document.getElementById('rotSkip').click());}
   // menu
@@ -28,7 +28,7 @@ for(const [name,w0,h0] of sizes){ for(const land of [false,true]){
     await p.locator('.card').nth(gi).click({force:true});
     await p.waitForTimeout(150);
     // portrait-phone notice may appear again -> skip
-    await p.evaluate(()=>{const r=document.getElementById('rotate');if(!r.classList.contains('hidden'))document.getElementById('rotSkip').click()});
+    { const shown=await p.evaluate(()=>!document.getElementById('rotate').classList.contains('hidden')); if(portraitPhone&&!shown)F(tag+' '+games[gi],'rotate notice not shown when entering a game'); if(shown)await p.evaluate(()=>document.getElementById('rotSkip').click()); }
     const ov=await p.evaluate(()=>{const e=document.querySelector('.panel').getBoundingClientRect(),b=document.getElementById('ovBtn1').getBoundingClientRect(),b2=document.getElementById('ovBtn2').getBoundingClientRect();return [e.left,e.top,e.right,e.bottom,b.bottom,b2.bottom,b.height]});
     if(ov[0]<-1||ov[2]>w+1||ov[1]<-1||ov[3]>h+1||ov[4]>h||ov[5]>h)F(tag+' '+games[gi],'intro panel/buttons outside viewport '+ov.map(Math.round));
     if(ov[6]<40)F(tag+' '+games[gi],'start button too small '+Math.round(ov[6]));

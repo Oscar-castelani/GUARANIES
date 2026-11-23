@@ -59,7 +59,7 @@ const Core = (function () {
 
   /* ---------- flujo ---------- */
   function showMenu() {
-    state = 'menu'; inst = null; cur = null;
+    state = 'menu'; inst = null; cur = null; checkOrient();
     if (endTimer) clearTimeout(endTimer);
     $('overlay').classList.add('hidden');
     $('gameScreen').classList.add('hidden'); $('menu').classList.remove('hidden');
@@ -116,7 +116,7 @@ const Core = (function () {
   /* ---------- entrada ---------- */
   function toGame(e) {
     const r = canvas.getBoundingClientRect();
-    return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * view.visH + view.offY];
+    return [(e.clientX - r.left) / r.width * view.visW + view.offX, (e.clientY - r.top) / r.height * view.visH + view.offY];
   }
   function bindInput() {
     canvas.addEventListener('pointerdown', e => {
@@ -134,22 +134,41 @@ const Core = (function () {
   }
 
   /* ---------- tamaño ---------- */
-  const view = { offY: 0, visH: H };
+  const view = { offX: 0, offY: 0, visW: W, visH: H, x0: 0, x1: W };
+  /* El juego llena el 100 % de la pantalla: en pantallas anchas se recorta un poco arriba/abajo (hasta 22 %)
+     y, si todavía sobra ancho, el escenario se prolonga a los costados (reflejo del fondo). */
   function resize() {
     if (!canvas) return;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    document.body.classList.toggle('hudov', vw > vh && Math.min(vw, vh) < 700);   // celular horizontal: la barra flota sobre el juego
     const st = $('stage'), sw = st.clientWidth, sh = st.clientHeight;
     if (sw <= 0 || sh <= 0) return;
-    const MAXCROP = .22, focus = cur && cur.focus != null ? cur.focus : .5;
-    let s;
-    if (sw / sh < W / H) s = sw / W;                      // pantalla alta: se ve todo el juego
-    else s = Math.min(sw / W, sh / (H * (1 - MAXCROP)));   // pantalla ancha: llena el ancho recortando un poco arriba/abajo
-    const cw = W * s, ch = Math.min(sh, H * s);
-    view.visH = ch / s; view.offY = (H - view.visH) * focus;
+    const aspect = sw / sh, focus = cur && cur.focus != null ? cur.focus : .5, MAXCROP = .22;
+    let cw, ch;
+    if (aspect < W / H) { cw = sw; ch = sw * H / W; view.visW = W; view.visH = H; view.offX = 0; view.offY = 0; }
+    else {
+      cw = sw; ch = sh;
+      view.visH = Math.max(W / aspect, H * (1 - MAXCROP)); view.visW = aspect * view.visH;
+      view.offY = (H - view.visH) * focus; view.offX = -(view.visW - W) / 2;
+    }
+    view.x0 = view.offX; view.x1 = view.offX + view.visW;
     canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
     const dpr = Math.min(window.devicePixelRatio || 1, 2), bw = Math.round(cw * dpr), bh = Math.round(ch * dpr);
     if (canvas.width !== bw || canvas.height !== bh) { canvas.width = bw; canvas.height = bh; }
-    k = canvas.width / W;
+    k = canvas.width / view.visW;
     checkOrient();
+  }
+  /* Dibuja el fondo del juego y prolonga el escenario a los costados si hace falta. */
+  function drawBg(c, img, filler) {
+    c.drawImage(img, 0, 0, W, H);
+    const m = -view.offX; if (m <= .5) return;
+    const f = filler || img;
+    for (const side of [-1, 1]) for (let i = 0; i * W < m; i++) {
+      const x0 = side < 0 ? -(i + 1) * W : W + i * W;
+      c.save();
+      if (i % 2 === 0) { c.translate(x0 + W, 0); c.scale(-1, 1); c.drawImage(f, 0, 0, W, H); } else c.drawImage(f, x0, 0, W, H);
+      c.restore();
+    }
   }
 
   /* ---------- pantalla completa ---------- */
@@ -176,7 +195,7 @@ const Core = (function () {
   function checkOrient() {
     const portrait = window.innerHeight > window.innerWidth, phone = Math.min(window.innerWidth, window.innerHeight) < 700;
     if (!portrait) rotSkipped = false;
-    const show = portrait && phone && !rotSkipped;
+    const show = portrait && phone && !rotSkipped && state !== 'menu';   // solo al entrar a un juego
     $('rotate').classList.toggle('hidden', !show);
     if (show) pauseGame();
   }
@@ -191,7 +210,7 @@ const Core = (function () {
       inst.update(dt);
       if (timeLeft <= 0 && state === 'play') { timeLeft = 0; updateTime(); inst.timeUp(); }
     } else if (state === 'ending') inst.update(dt);
-    ctx.setTransform(k, 0, 0, k, 0, -view.offY * k);
+    ctx.setTransform(k, 0, 0, k, -view.offX * k, -view.offY * k);
     inst.draw(ctx);
     if ((++frameN & 7) === 0) { try { ambCtx.drawImage(canvas, 0, 0, 64, 36); } catch (e) {} }
     floats = floats.filter(f => (f.t += dt) < 1.1);
@@ -243,7 +262,7 @@ const Core = (function () {
   }
 
   return {
-    W, H, register, init, addScore, setGoal, float, finish, sfx,
+    W, H, view, drawBg, get inst() { return inst; }, register, init, addScore, setGoal, float, finish, sfx,
     get score() { return score; }, get state() { return state; },
     get timeLeft() { return timeLeft; }, get timeTotal() { return cur ? cur.time : 0; }
   };
