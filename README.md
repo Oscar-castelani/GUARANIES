@@ -8,7 +8,7 @@ Al abrir muestra 3 segundos la portada (`assets/portada.jpg`, reemplazable) y lu
 |---|---|---|
 | Arco y flecha | 120 s | 30 animales; cada acierto acelera el juego; flechas ilimitadas, pausa 0,85 s |
 | Encontrá los tucanes | 90 s | 5 tucanes por nivel; niveles que suben la dificultad |
-| Llená la canasta | 60 s | 15 alimentos correctos (provisional) con distractores |
+| Llená la canasta | 75 s | 25 alimentos correctos (provisional) con distractores |
 | Cosecha rápida | 90 s | 40 cosechas (provisional); más rápido y más topos con el tiempo |
 | Apagá el fuego | 60 s | Salvar ≥2 de 4 casas (provisional); agua ilimitada, pausa 0,75 s |
 
