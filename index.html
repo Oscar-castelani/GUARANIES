@@ -17,13 +17,31 @@
 <body>
 
 <!-- Menú funcional de selección (NO es una portada; la portada la incorpora el usuario después) -->
-<main id="menu" class="screen">
+<main id="hub" class="screen">
+  <header class="menu-head"><h1>Aventura Guaraní</h1><p>¿Qué querés hacer?</p></header>
+  <section id="hubCards" class="cards" aria-label="Secciones"></section>
+  <footer class="menu-foot"><button id="muteHub" class="chip" aria-pressed="false">Sonido: sí</button></footer>
+</main>
+
+<main id="videos" class="screen hidden">
+  <button class="chip backs" data-go="hub" aria-label="Volver al inicio">&#8592; Inicio</button>
+  <header class="menu-head"><h1>Videos</h1><p>Tocá un video para verlo</p></header>
+  <section id="videoCards" class="cards" aria-label="Videos"></section>
+</main>
+
+<main id="resources" class="screen hidden">
+  <button class="chip backs" data-go="hub" aria-label="Volver al inicio">&#8592; Inicio</button>
+  <header class="menu-head"><h1>Recursos y enlaces</h1><p>Para seguir aprendiendo</p></header>
+  <section id="linkList" class="links" aria-label="Enlaces"></section>
+</main>
+
+<main id="menu" class="screen hidden">
+  <button class="chip backs" data-go="hub" aria-label="Volver al inicio">&#8592; Inicio</button>
     <header class="menu-head">
     <h1>Aventura Guaraní</h1>
     <p>Elegí un minijuego</p>
   </header>
   <section id="cards" class="cards" aria-label="Minijuegos"></section>
-  <footer class="menu-foot"><button id="muteMenu" class="chip" aria-pressed="false">Sonido: sí</button></footer>
 </main>
 
 <section id="gameScreen" class="screen hidden">
@@ -52,6 +70,10 @@
 </section>
 
 <div id="splash" role="img" aria-label="Portada: Grupo guaranies"><img src="assets/portada.jpg" alt="Portada: Grupo guaranies"></div>
+<div id="vmodal" class="hidden" role="dialog" aria-modal="true" aria-label="Reproductor de video">
+  <div class="vbox"><button id="vclose" class="chip" aria-label="Cerrar video">Cerrar &#10005;</button><div id="vframe"></div><a id="vopen" class="chip" target="_blank" rel="noopener noreferrer">Abrir en YouTube</a></div>
+</div>
+<div id="toast" class="hidden" role="status"></div>
 <div id="rotate" class="hidden" role="alert">
   <div class="rot-box">
     <svg class="phone" viewBox="0 0 60 100" width="70" height="116" aria-hidden="true"><rect x="8" y="4" width="44" height="92" rx="9" fill="#f6ead0" stroke="#2a1d10" stroke-width="4"/><rect x="15" y="14" width="30" height="66" rx="3" fill="#2c6b3a"/><circle cx="30" cy="89" r="3.5" fill="#2a1d10"/></svg>
@@ -71,6 +93,7 @@
 <script src="js/games/cosecha.js"></script>
 <script src="js/games/fuego.js"></script>
 <script src="js/games/luciernagas.js"></script>
-<script>Core.init();</script>
+<script src="js/hub.js"></script>
+<script>Core.init(); Hub.init();</script>
 </body>
 </html>

@@ -17,15 +17,19 @@ for(const [name,w0,h0] of sizes){ for(const land of [false,true]){
   if(notice)F(tag,'rotate notice shown on the cover/menu (must only show inside a game)');
   if(notice){const r=await p.evaluate(()=>{const e=document.querySelector('.rot-box').getBoundingClientRect();return [e.left,e.top,e.right,e.bottom]});if(r[0]<0||r[2]>w||r[1]<0||r[3]>h)F(tag,'rotate box overflows '+r);
     await p.evaluate(()=>document.getElementById('rotSkip').click());}
+  for(const sec of ['hub','videos','resources']){ await p.evaluate(id=>Core.showSection(id),sec); await p.waitForTimeout(80);
+    const q=await p.evaluate(id=>{const m=document.getElementById(id);const r=[...m.querySelectorAll('.card,.links a,.backs')].filter(e=>e.offsetParent).map(e=>e.getBoundingClientRect());return {sh:m.scrollHeight,ch:m.clientHeight,out:r.filter(b=>b.right>innerWidth+1||b.bottom>innerHeight+1||b.left<-1).length}},sec);
+    if(q.sh>q.ch+1)F(tag,sec.toUpperCase()+' scrolls ('+q.sh+'>'+q.ch+')'); if(q.out)F(tag,sec+': '+q.out+' elements outside viewport'); }
+  await p.evaluate(()=>document.getElementById('hubGames').click());await p.waitForTimeout(200);
   // menu
-  const m=await p.evaluate(()=>{const m=document.getElementById('menu');const cards=[...document.querySelectorAll('.card')].map(c=>c.getBoundingClientRect());const foot=document.getElementById('muteMenu').getBoundingClientRect();return {sh:m.scrollHeight,ch:m.clientHeight,sw:document.documentElement.scrollWidth,cards:cards.map(r=>[Math.round(r.left),Math.round(r.top),Math.round(r.right),Math.round(r.bottom)]),footB:foot.bottom,h1:document.querySelector('h1').getBoundingClientRect().top}});
+  const m=await p.evaluate(()=>{const m=document.getElementById('menu');const cards=[...document.querySelectorAll('#cards .card')].map(c=>c.getBoundingClientRect());const foot=document.querySelector('#menu .backs').getBoundingClientRect();return {sh:m.scrollHeight,ch:m.clientHeight,sw:document.documentElement.scrollWidth,cards:cards.map(r=>[Math.round(r.left),Math.round(r.top),Math.round(r.right),Math.round(r.bottom)]),footB:foot.bottom,h1:document.querySelector('h1').getBoundingClientRect().top}});
   if(m.sh>m.ch+1)F(tag,'MENU scrolls ('+m.sh+'>'+m.ch+')');
   if(m.sw>w+1)F(tag,'menu horizontal overflow');
   m.cards.forEach((c,i)=>{if(c[2]>w+1||c[0]<-1||c[3]>h+1)F(tag,'card '+i+' outside viewport '+c)});
   if(m.footB>h+1)F(tag,'sound button below viewport');
   // games
   for(let gi=0;gi<5;gi++){
-    await p.locator('.card').nth(gi).click({force:true});
+    await p.locator('#cards .card').nth(gi).click({force:true});
     await p.waitForTimeout(150);
     // portrait-phone notice may appear again -> skip
     { const shown=await p.evaluate(()=>!document.getElementById('rotate').classList.contains('hidden')); if(portraitPhone&&!shown)F(tag+' '+games[gi],'rotate notice not shown when entering a game'); if(shown)await p.evaluate(()=>document.getElementById('rotSkip').click()); }

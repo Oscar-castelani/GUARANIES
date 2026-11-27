@@ -19,3 +19,12 @@ const EDU = {
   luciernagas: 'Las luciérnagas son insectos que producen su propia luz.',
   fuego:   'Juego ficticio: cuidar la vegetación y prevenir incendios es importante hoy para proteger el entorno.'
 };
+
+/* Videos de la sección «Videos». Para cambiar títulos o agregar videos, editá esta lista.
+   id = el código que está en el enlace de YouTube (watch?v=ID o shorts/ID). */
+const VIDEOS = [
+  { id: 'CgthzTtvz_Y', title: 'Video 1', kind: 'Video' },
+  { id: 'CGGxuRIBQK4', title: 'Video 2', kind: 'Video' },
+  { id: 'KfiMn81nUXo', title: 'Video 3', kind: 'Video' },
+  { id: 'CQd14YAUZcU', title: 'Video 4', kind: 'Short', short: true }
+];

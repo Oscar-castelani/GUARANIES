@@ -44,8 +44,8 @@ const Core = (function () {
     try { localStorage.setItem('ag_muted', m ? '1' : '0'); } catch (e) {}
     $('muteBtn').textContent = m ? 'Sin sonido' : 'Sonido';
     $('muteBtn').setAttribute('aria-pressed', m);
-    $('muteMenu').textContent = 'Sonido: ' + (m ? 'no' : 'sí');
-    $('muteMenu').setAttribute('aria-pressed', m);
+    $('muteHub').textContent = 'Sonido: ' + (m ? 'no' : 'sí');
+    $('muteHub').setAttribute('aria-pressed', m);
     if (!m) ensureAudio();
   }
 
@@ -58,17 +58,19 @@ const Core = (function () {
   function float(x, y, text, color) { floats.push({ x, y, text, color: color || '#fff', t: 0 }); }
 
   /* ---------- flujo ---------- */
-  function showMenu() {
+  const SCREENS = ['hub', 'menu', 'videos', 'resources', 'gameScreen'];
+  function go(id) { SCREENS.forEach(s => $(s).classList.toggle('hidden', s !== id)); }
+  function showSection(id) {
     state = 'menu'; inst = null; cur = null; checkOrient();
     if (endTimer) clearTimeout(endTimer);
-    $('overlay').classList.add('hidden');
-    $('gameScreen').classList.add('hidden'); $('menu').classList.remove('hidden');
+    $('overlay').classList.add('hidden'); go(id);
   }
+  function showMenu() { showSection('menu'); }   // menú de juegos
   function openGame(id) {
     ensureAudio(); goFull(); rotSkipped = false;
     cur = games[id]; score = 0; floats = [];
     if (endTimer) clearTimeout(endTimer);
-    $('menu').classList.add('hidden'); $('gameScreen').classList.remove('hidden');
+    go('gameScreen');
     resize();
     inst = cur.make(); timeLeft = cur.time;
     $('scoreVal').textContent = '0'; goalMax = cur.goal; setGoal(0, cur.goal, cur.goalLabel);
@@ -239,7 +241,7 @@ const Core = (function () {
     try { muted = localStorage.getItem('ag_muted') === '1'; } catch (e) {}
     buildMenu(); bindInput(); setMuted(muted);
     $('backBtn').onclick = showMenu;
-    $('muteBtn').onclick = () => setMuted(!muted); $('muteMenu').onclick = () => setMuted(!muted);
+    $('muteBtn').onclick = () => setMuted(!muted); $('muteHub').onclick = () => setMuted(!muted);
     window.addEventListener('resize', resize); window.addEventListener('orientationchange', () => setTimeout(resize, 250));
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) pauseGame();
@@ -262,7 +264,7 @@ const Core = (function () {
   }
 
   return {
-    W, H, view, drawBg, get inst() { return inst; }, register, init, addScore, setGoal, float, finish, sfx,
+    W, H, view, drawBg, go, showSection, showMenu, get inst() { return inst; }, register, init, addScore, setGoal, float, finish, sfx,
     get score() { return score; }, get state() { return state; },
     get timeLeft() { return timeLeft; }, get timeTotal() { return cur ? cur.time : 0; }
   };

@@ -3,6 +3,10 @@
 Sitio estático (HTML5 + CSS + JavaScript, Canvas 2D, sin dependencias ni servidor). Sin anuncios, registro ni datos personales.
 Al abrir muestra 3 segundos la portada (`assets/portada.jpg`, reemplazable) y luego el menú de juegos; se puede saltar tocando.
 
+## Estructura de pantallas
+Portada (3 s) → **Inicio** (tarjetas: Juegos, Videos, Cuento *(próximamente)*, Recursos y enlaces) → cada sección, con botón «← Inicio».
+Los videos y sus títulos se editan en `js/content.js` (`VIDEOS`). Las vistas previas usan la miniatura de YouTube y el reproductor se abre dentro del sitio.
+
 ## Juegos
 | Juego | Tiempo | Meta |
 |---|---|---|
